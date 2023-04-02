@@ -1,5 +1,6 @@
 # majority.rocks
 
 ## Goals
-- [ ] Create unique room code generation
+- [x] Create unique room code generation
+- [ ] Socket.io Create Room functionality
 - [ ] Add join room functionality

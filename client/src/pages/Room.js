@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Room = ({ socket }) => {
    
     const [users, setUsers] = useState([]);
+    const [id, setId] = useState("")
+    const { roomId } = useParams();
    
     useEffect(() => {
         socket.on('userListResponse', (data) => setUsers(data));
-    }, [socket, users]);
+        setId(roomId);
+    }, [socket, users, roomId]);
 
     return (
         <>
@@ -28,6 +32,7 @@ const Room = ({ socket }) => {
             </div>
             <div className="w-full text-center grid-cols-1 pt-8 pb-4 justify-items-center">
                 <h2>Settings</h2>
+                <h3>Room Code: {id}</h3>
             </div>
         </div>
         </>

@@ -19,7 +19,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home socket={socket}/>}/>
-          <Route path="room" element={<Room socket={socket}/>}/>
+          <Route path="room/:roomId" element={<Room socket={socket}/>}/>
           <Route path="*" element={<NoPage />}/>
         </Route>
       </Routes>
