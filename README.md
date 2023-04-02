@@ -3,5 +3,6 @@
 ## Goals
 - [x] Configure tailwind
 - [x] Configure react router
-- [ ] Create main page 
-- [ ] Create login page
+- [x] Create starting page
+- [ ] Create room page
+- [ ] Set-up Socket.io

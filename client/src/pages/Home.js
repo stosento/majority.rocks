@@ -1,5 +1,11 @@
+import React, { useState, useEffect } from "react";
+import RoomCode from "../components/RoomCode";
+
 const Home = () => {
 
+    const [showCode, setShowCode] = useState(false);
+
+    console.log("home")
 
     return (
         <div className="w-full grid grid-cols-1 justify-items-center">
@@ -9,7 +15,7 @@ const Home = () => {
                     Enter your name: 
                 </label>
                 <input 
-                    className="w-full px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring"
+                    className="w-full px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-xl uppercase border-0 shadow outline-none focus:outline-none focus:ring"
                     type="text"
                     placeholder="Name..."
                     id="name"
@@ -18,20 +24,15 @@ const Home = () => {
 
             <div className="w-3/4 grid grid-cols-2">
                 <div className="grid grid-cols-1">
-                    <button className="h-24 m-4 px-4 py-8 font-bold text-white rounded bg-blue-500">
+                    <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-500 text-xl">
                         Create Room
                     </button>
                 </div>
                 <div className="grid grid-cols-1">
-                    <button className="h-24 m-4 px-4 py-8 font-bold text-white rounded bg-blue-500">
+                    <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-500 text-xl" onClick={() => setShowCode(!showCode)}>
                         Join Room
                     </button>
-                    <input 
-                        className="w-full px-3 placeholder-slate-300 text-slate-600 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring"
-                        type="text"
-                        placeholder="Name..."
-                        id="name"
-                ></input>
+                    <RoomCode show={showCode}/>
                 </div>
             </div>
         </div>
