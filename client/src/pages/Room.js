@@ -1,15 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const Room = (props) => {
+const Room = ({ socket }) => {
    
     const [users, setUsers] = useState([]);
-    
+   
+    useEffect(() => {
+        socket.on('userListResponse', (data) => setUsers(data));
+    }, [socket, users]);
+
     return (
         <>
         <h1 className="text-center text-4xl">MAJORITY.ROCKS</h1>
         <div className="w-full grid grid-cols-3 justify-items-center">
             <div className="w-full text-center">
                 <h2>Users</h2>
+                <ul className="list-disc list-inside">
+                    {users.map((user) => (
+                        <li key={user.socketID}>{user.userName}</li>
+                    ))}
+                </ul>
             </div>
             <div className="w-full text-center">
                 Playback will go here

@@ -6,26 +6,20 @@ import Room from "./pages/Room";
 import NoPage from "./pages/NoPage";
 
 import './App.css';
-import { disconnectSocket, initiateSocketConnection, subscribeToChat } from "./socketio.service";
+import { io } from "socket.io-client";
+import { initiateSocketConnection } from "./socketio.service";
+
+// const socket = initiateSocketConnection();
+const socket = io.connect('http://localhost:8888')
 
 function App() {
-
-  useEffect(() => {
-    initiateSocketConnection();
-    subscribeToChat((err, data) => {
-      console.log(data);
-    });
-    return () => {
-      disconnectSocket();
-    }
-  }, []);
 
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />}/>
-          <Route path="room" element={<Room />}/>
+          <Route index element={<Home socket={socket}/>}/>
+          <Route path="room" element={<Room socket={socket}/>}/>
           <Route path="*" element={<NoPage />}/>
         </Route>
       </Routes>

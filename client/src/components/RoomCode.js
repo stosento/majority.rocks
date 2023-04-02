@@ -22,7 +22,10 @@ const RoomCode = (props) => {
                     className="h-15 mx-3 px-3 py-3 text-lg uppercase placeholder-slate-300 text-slate-600 bg-white rounded text-sm border-0 shadow outline-none focus:outline-none focus:ring"
                     type="text"
                     placeholder="Code..."
-                    id="code">
+                    id="code"
+                    value={props.value}
+                    onChange={(e) => props.setValue(e.target.value)}
+                >    
                 </input>
                 <button className="font-bold rounded bg-blue-500 h-14 w-1/4">
                     Enter

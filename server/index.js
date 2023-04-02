@@ -1,11 +1,16 @@
-const app = require('express')();
-const http = require('http').createServer(app);
+const express = require('express')
+const app = express();
+const http = require('http').Server(app);
+const cors = require('cors');
+
 const frontendPort = 3000
 const serverPort = 8888
-const io = require('socket.io')(
-  http, {
+
+app.use(cors())
+
+const io = require('socket.io')(http, {
     cors: {
-      origins: [`http://localhost:${frontendPort}`]
+      origin: `http://localhost:${frontendPort}`
     }
   }
 );
@@ -14,13 +19,25 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+// SOCKET.IO BEHAVIOR
+
+let users = [];
+
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log(`${socket.id} user connected`);
+
+  // Listening for new user joining the room
+  socket.on('newUser', (data) => {
+    users.push(data);
+    io.emit('userListResponse', users);
+  });
+
+  // Listening for disconnection
   socket.on('disconnect', () => {
     console.log('user disconnected');
-  });
-  socket.on('my message', (msg) => {
-    io.emit('my broadcast', `server: ${msg}`);
+    users = users.filter((user) => user.socketID !== socket.id);
+    io.emit('userListResponse', users);
+    socket.disconnect();
   });
 });
 
