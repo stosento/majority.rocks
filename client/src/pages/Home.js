@@ -11,6 +11,21 @@ const Home = ({ socket }) => {
     const [showCode, setShowCode] = useState(false);
     const [userName, setUserName] = useState("");
     const [inputCode, setInputCode] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+
+    useEffect(() => {
+        console.log("In Home useEffect");
+        socket.on("joinRoomFailed", (roomCode) => {
+            console.log("Unable to find room");
+            //TODO -- Add error message that room doesn't exist
+            setErrorMsg(`Room ${roomCode} does not exist`);
+        });
+        socket.on("joinRoomSuccess", (roomCode) => {
+            console.log("Joining room", roomCode);
+            navigate(`/room/${roomCode}`);
+        })
+
+    }, [socket]);
 
     const createRoom = (e) => {
         e.preventDefault();
@@ -19,7 +34,6 @@ const Home = ({ socket }) => {
         localStorage.setItem('userName', userName);
 
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
-        
         navigate(`/room/${roomCode}`);
     }
 
@@ -32,10 +46,6 @@ const Home = ({ socket }) => {
         localStorage.setItem('userName', userName);
 
         socket.emit('joinRoom', {roomCode: inputCode, userName, socketId: socket.id});
-
-        //TODO -- handle response of room not existing
-
-        navigate(`/room/${inputCode}`);
     }
 
     return (
@@ -73,6 +83,7 @@ const Home = ({ socket }) => {
                         value={inputCode}
                         setValue={setInputCode}
                         joinRoom={joinRoom}
+                        errorMsg={errorMsg}
                     />
                 </div>
             </div>

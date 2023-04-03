@@ -49,29 +49,28 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (data) => {
 
     const roomCode = getPropertyVal(data, "roomCode");
-    // TODO -- check if exists
-
-
-    const userName = getPropertyVal(data, "userName");
     const socketId = getPropertyVal(data, "socketId");
-    const userInfo = {userName, socketId};
+    const userName = getPropertyVal(data, "userName");
 
-    addToRoomMap(roomCode, userInfo);
-
-    socket.join(roomCode);
-
-    console.log(`user ${socket.id} joining room ${roomCode}`)
-
-    // Emit user list to room
-    io.to(roomCode).emit('userListResponse', roomMap[roomCode]);
-
+    if (existsInRoomMap(roomCode)) {
+      const userInfo = {userName, socketId};
+  
+      addToRoomMap(roomCode, userInfo);
+  
+      socket.join(roomCode);
+      console.log(`user ${socket.id} joining room ${roomCode}`)
+      io.to(socketId).emit('joinRoomSuccess', roomCode);
+      io.in(roomCode).emit('userListResponse', roomMap[roomCode]);
+    } else {
+      io.to(socketId).emit("joinRoomFailed", roomCode);
+    }
   })
 
   // Leaving rooms
   socket.on('disconnecting', () => {
     console.log(`user ${socket.id} leaving rooms ${new Array(...socket.rooms).join(' ')}`)
     socket.rooms.forEach(room => {
-      console.log("Removing from socket", room);
+      console.log("Removing from room", room);
       removeFromRoomMap(room, socket.id)
       io.to(room).emit('userListResponse', roomMap[room])
     });
@@ -110,8 +109,27 @@ function addToRoomMap(key, value) {
 function removeFromRoomMap(key, value) {
   let users = roomMap[key];
   if (users) {
+    console.log("Removing user from Room Map")
     users = users.filter((user) => user.socketId !== value);
     roomMap[key] = users;
   }
+
+  if (users && users.length < 1) {
+    console.log("Empty User Map - removing key")
+    roomMap = roomMap.filter(room => room !== key)
+  }
   console.log("roomMap after remove", roomMap);
+}
+
+// Check if room exists in room map
+function existsInRoomMap(key) {
+  let roomExists = false;
+  let value = roomMap[key];
+  if (value) {
+    console.log("Found a room");
+    roomExists = true;
+  } else {
+    console.log("Room was not found");
+  }
+  return roomExists
 }

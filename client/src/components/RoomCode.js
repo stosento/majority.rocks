@@ -30,6 +30,9 @@ const RoomCode = (props) => {
                 >
                     Enter
                 </button>
+                <p className="text-red-500">
+                    {props.errorMsg}
+                </p>
             </div>
         </div>
     );
