@@ -24,7 +24,10 @@ const RoomCode = (props) => {
                     onChange={(e) => props.setValue(e.target.value)}
                 >    
                 </input>
-                <button className="font-bold rounded bg-blue-500 h-14 w-1/4">
+                <button 
+                    className="font-bold rounded bg-blue-500 h-14 w-1/4"
+                    onClick={props.joinRoom}
+                >
                     Enter
                 </button>
             </div>

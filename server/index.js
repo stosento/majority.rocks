@@ -26,13 +26,14 @@ let roomMap = [];
 io.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
 
-  // Listening for new user joining the room
+  // Listening for new user creating a room
   socket.on('createRoom', (data) => {
 
     // Update User List with host
     const userName = getPropertyVal(data, "userName");
     const socketId = getPropertyVal(data, "socketId");
     const roomCode = getPropertyVal(data, "roomCode");
+
     const userInfo = {userName, socketId};
     addToRoomMap(roomCode, userInfo)
 
@@ -44,18 +45,41 @@ io.on('connection', (socket) => {
     io.to(roomCode).emit('userListResponse', roomMap[roomCode]);
   });
 
+  // Joining an existing room
+  socket.on('joinRoom', (data) => {
+
+    const roomCode = getPropertyVal(data, "roomCode");
+    // TODO -- check if exists
+
+
+    const userName = getPropertyVal(data, "userName");
+    const socketId = getPropertyVal(data, "socketId");
+    const userInfo = {userName, socketId};
+
+    addToRoomMap(roomCode, userInfo);
+
+    socket.join(roomCode);
+
+    console.log(`user ${socket.id} joining room ${roomCode}`)
+
+    // Emit user list to room
+    io.to(roomCode).emit('userListResponse', roomMap[roomCode]);
+
+  })
+
   // Leaving rooms
   socket.on('disconnecting', () => {
     console.log(`user ${socket.id} leaving rooms ${new Array(...socket.rooms).join(' ')}`)
+    socket.rooms.forEach(room => {
+      console.log("Removing from socket", room);
+      removeFromRoomMap(room, socket.id)
+      io.to(room).emit('userListResponse', roomMap[room])
+    });
   })
 
   // Listening for disconnection
   socket.on('disconnect', () => {
     console.log(`user ${socket.id} disconnected`);
-    socket.rooms.forEach(room => {
-      removeFromRoomMap(room, socket.id)
-      io.to(room).emit('userListResponse', roomMap[room])
-    });
     socket.disconnect();
   });
 });
@@ -79,11 +103,15 @@ function getPropertyVal(obj, dataToRetrieve) {
 function addToRoomMap(key, value) {
   roomMap[key] = roomMap[key] || [];
   roomMap[key].push(value);
+  console.log("roomMap after add", roomMap);
 }
 
 // Remove user from our room map
 function removeFromRoomMap(key, value) {
   let users = roomMap[key];
-  users = users.filter((user) => user.socketId !== value);
-  roomMap[key] = users;
+  if (users) {
+    users = users.filter((user) => user.socketId !== value);
+    roomMap[key] = users;
+  }
+  console.log("roomMap after remove", roomMap);
 }
