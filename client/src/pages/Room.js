@@ -10,6 +10,7 @@ const Room = ({ socket }) => {
     useEffect(() => {
         socket.on('userListResponse', (data) => setUsers(data));
         setId(roomId);
+        console.log(`Room ${roomId} Users: `, users);
     }, [socket, users, roomId]);
 
     return (
@@ -20,7 +21,7 @@ const Room = ({ socket }) => {
                 <h2>Users</h2>
                 <ul className="list-disc list-inside">
                     {users.map((user) => (
-                        <li key={user.socketID}>{user.userName}</li>
+                        <li key={user.socketId}>{user.userName}</li>
                     ))}
                 </ul>
             </div>

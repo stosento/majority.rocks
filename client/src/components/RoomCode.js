@@ -7,10 +7,7 @@ const RoomCode = (props) => {
     useEffect(() => {
         let num = props.show ? 0 : 100;
         setOpacity("opacity-" + num);
-        console.log("num", num)
     })
-
-    console.log("opacity", opacity)
 
     return (
         <div className={opacity + " transition w-full px-10"}>

@@ -10,7 +10,6 @@ const Home = ({ socket }) => {
 
     const [showCode, setShowCode] = useState(false);
     const [userName, setUserName] = useState("");
-    const [roomCode, setRoomCode] = useState("");
 
     const createRoom = (e) => {
         e.preventDefault();
@@ -19,7 +18,7 @@ const Home = ({ socket }) => {
         localStorage.setItem('userName', userName);
 
         // send to node.js
-        socket.emit('newUser', {userName, socketID: socket.id});
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
         
         navigate(`/room/${roomCode}`);
     }
@@ -57,8 +56,6 @@ const Home = ({ socket }) => {
                         </button>
                         <RoomCode 
                             show={showCode}
-                            value={roomCode}
-                            setValue={setRoomCode} 
                         />
                     </div>
                 </div>
