@@ -115,7 +115,6 @@ function removeFromRoomMap(key, value) {
   }
 
   if (users && users.length < 1) {
-    console.log("Empty User Map - removing key")
     roomMap = roomMap.filter(room => room !== key)
   }
   console.log("roomMap after remove", roomMap);

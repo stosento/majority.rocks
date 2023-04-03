@@ -8,7 +8,7 @@
 - [x] Validate room exists upon joining
   - [x] Bug when joining as non-creator, list isn't showing
 - [x] Fix the "Join Room" show functionality
-- [ ] Install nodemon
+- [x] Install nodemon
 - [ ] Connect host to Spotify
 - [ ] Reconnect functionality
 - [ ] Display Spotify playback on screen
