@@ -17,7 +17,6 @@ const Home = ({ socket }) => {
         console.log("In Home useEffect");
         socket.on("joinRoomFailed", (roomCode) => {
             console.log("Unable to find room");
-            //TODO -- Add error message that room doesn't exist
             setErrorMsg(`Room ${roomCode} does not exist`);
         });
         socket.on("joinRoomSuccess", (roomCode) => {
