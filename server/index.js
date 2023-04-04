@@ -52,13 +52,13 @@ io.on('connection', (socket) => {
     const socketId = getPropertyVal(data, "socketId");
     const userName = getPropertyVal(data, "userName");
 
-    if (existsInRoomMap(roomCode)) {
+    if (roomIsValid(roomCode)) {
       const userInfo = {userName, socketId};
   
       addToRoomMap(roomCode, userInfo);
   
+      console.log(`user ${socket.id} joining room ${roomCode}`);
       socket.join(roomCode);
-      console.log(`user ${socket.id} joining room ${roomCode}`)
       io.to(socketId).emit('joinRoomSuccess', roomCode);
       io.in(roomCode).emit('userListResponse', roomMap[roomCode]);
     } else {
@@ -121,7 +121,7 @@ function removeFromRoomMap(key, value) {
 }
 
 // Check if room exists in room map
-function existsInRoomMap(key) {
+function roomIsValid(key) {
   let roomExists = false;
   let value = roomMap[key];
   if (value) {

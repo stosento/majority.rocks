@@ -38,12 +38,9 @@ const Home = ({ socket }) => {
 
     const joinRoom = (e) => {
         e.preventDefault();
-
-        console.log("Joining room");
-        console.log("Username: ", userName);
-
         localStorage.setItem('userName', userName);
 
+        console.log(`${userName} joining room`);
         socket.emit('joinRoom', {roomCode: inputCode, userName, socketId: socket.id});
     }
 

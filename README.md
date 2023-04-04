@@ -9,6 +9,8 @@
   - [x] Bug when joining as non-creator, list isn't showing
 - [x] Fix the "Join Room" show functionality
 - [x] Install nodemon
+- [ ] Create room objects
+- [ ] Create rules engine upon skipping
 - [ ] Connect host to Spotify
 - [ ] Reconnect functionality
 - [ ] Display Spotify playback on screen

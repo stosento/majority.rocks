@@ -8,10 +8,14 @@ const Room = ({ socket }) => {
     const { roomId } = useParams();
    
     useEffect(() => {
-        socket.on('userListResponse', (data) => updateUsers(data));
+        console.log('users', users);
+        socket.on('userListResponse', (data) => {
+            console.log("data in userListResponse", data);
+            updateUsers(data);
+        });
         setId(roomId);
         console.log(`Room ${roomId} Users: `, users);
-    }, [socket, users, roomId]);
+    }, [socket]);
 
     const updateUsers = (data) => {
         console.log("Updating my users")
