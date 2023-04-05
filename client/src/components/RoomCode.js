@@ -4,7 +4,7 @@ const RoomCode = (props) => {
 
     useEffect(() => {
         console.log("show", props.show)
-    })
+    },[props.show])
 
     return (
         props.show && (

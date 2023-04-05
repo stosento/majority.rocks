@@ -3,23 +3,50 @@ import { useParams } from "react-router-dom";
 
 const Room = ({ socket }) => {
    
+    const [initLoaded, setInitLoaded] = useState(false);
     const [users, setUsers] = useState([]);
-    const [id, setId] = useState("")
+    const [host, setHost] = useState({});
+    const [id, setId] = useState("");
+    const [disableSkip, setDisableSkip] = useState(false);
     const { roomId } = useParams();
    
     useEffect(() => {
-        console.log('users', users);
+
+        if (!initLoaded) {
+            socket.emit('getRoomInfo', roomId);
+            setInitLoaded(true);
+        }
+
+        setId(roomId);
+
         socket.on('userListResponse', (data) => {
-            console.log("data in userListResponse", data);
+            console.log("userListResponse received", data);
             updateUsers(data);
         });
-        setId(roomId);
-        console.log(`Room ${roomId} Users: `, users);
+        socket.on('roomInfo', (data) => {
+            console.log("getRoomInfo received", data);
+            updateRoomInfo(data);
+        });
+
     }, [socket]);
 
-    const updateUsers = (data) => {
-        console.log("Updating my users")
-        setUsers(data);
+    const updateUsers = (users) => {
+        console.log("Updating my users", users);
+        setUsers(users);
+    }
+
+    const handleSkip = () => {
+        socket.emit("pressSkip", id);
+        setDisableSkip(true);
+    }
+
+    const updateRoomInfo = (data) => {
+        console.log("update room info", data);
+        setUsers(data.users);
+        setHost(data.host);
+
+        console.log("data.users", data.users);
+        console.log("data.host", data.host);
     }
 
     return (
@@ -36,7 +63,11 @@ const Room = ({ socket }) => {
             </div>
             <div className="w-full text-center">
                 Playback will go here
-                <button className="w-full h-24 m-4 font-bold rounded bg-blue-500 text-xl">
+                <button 
+                    className="w-full h-24 m-4 font-bold rounded bg-blue-500 text-xl"
+                    onClick={handleSkip}
+                    disabled={disableSkip}
+                >
                     Skip
                 </button>
             </div>
