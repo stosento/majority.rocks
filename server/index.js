@@ -58,8 +58,8 @@ io.on('connection', (socket) => {
       socket.join(data.roomCode);
       addToRoomMap(data.roomCode, userInfo);
 
-      io.to(socket.id).emit('joinRoomSuccess', data.roomCode);
-      socket.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users);
+      io.to(socket.id).emit('joinRoomSuccess', data.roomCode); // update single user they joined
+      socket.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users); // update all other users
     } else {
       io.to(socket.id).emit("joinRoomFailed", data.roomCode);
     }
@@ -72,19 +72,16 @@ io.on('connection', (socket) => {
 
   // Setting skip
   socket.on('pressSkip', (roomCode) => {
-    console.log('skip pressed');
-    //TODO -- add skip to our map, count total
-
-    // Check if skipRule == SINGLE
+    let roomInfo = roomMap.get(roomCode);
+    let updatedSkipCount = roomInfo.skipCount + 1;
     
-      // Emit message to skip song
-
-    // Increment skipCount
-
-    // Call helper method skipSong(rule, skipCount)
-
-    // if (skipSong)
-
+    if (shouldSkip(roomInfo.skipRule, updatedSkipCount, roomInfo.users.length)) {
+      let host = roomInfo.host;
+      io.to(roomCode).emit("skipSong"); // host - facilitate spotify skip
+      updatedSkipCount = 0;
+    }
+    roomInfo.skipCount = updatedSkipCount;
+    roomMap.set(roomCode, roomInfo);
   })
 
   // Leaving rooms
@@ -114,7 +111,6 @@ function createRoom(roomCode, userInfo) {
 
   //Assume there are no objects for this room at this point
   let roomInfo = {
-    userCount: 1,
     skipCount: 0,
     users: [userInfo],
     host: userInfo,
@@ -191,4 +187,28 @@ function isHost(roomCode, userId) {
   let retVal = false;
   let host = roomMap.get(roomCode).host;
   return host.socketId === userId;
+}
+
+// Check if we should skip the song
+function shouldSkip(skipRule, skipCount, roomCount) {
+  let skip = false;
+
+  console.log("skipRule", skipRule);
+  console.log("skipCount", skipCount);
+  console.log("roomCount", roomCount);
+
+  if (skipRule === SkipRule.SINGLE) {
+    console.log("a");
+    skip = true;
+  } else if (skipRule === SkipRule.EVERYONE) {
+    console.log("b");
+    skip = skipCount === roomCount;
+  } else {
+    console.log("c");
+    skip = (roomCount / skipCount) > 2;
+  }
+
+
+  console.log("ShouldSkip", skip);
+  return skip;
 }

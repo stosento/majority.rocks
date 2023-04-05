@@ -31,7 +31,13 @@ const Room = ({ socket }) => {
         });
         socket.on('hostLeft', () => {
             navigate('/');
-        })
+        });
+        socket.on('skipSong', () => {
+            //Check if I am the host -- then facilitate skip song request to Spotify
+
+            //Reset the state of the skip button
+
+        });
 
     }, [socket]);
 
@@ -69,7 +75,7 @@ const Room = ({ socket }) => {
             <div className="w-full text-center">
                 Playback will go here
                 <button 
-                    className="w-full h-24 m-4 font-bold rounded bg-blue-500 text-xl"
+                    className="w-full h-24 m-4 font-bold rounded bg-blue-500 text-xl hover:bg-blue-700 disabled:bg-blue-950"
                     onClick={handleSkip}
                     disabled={disableSkip}
                 >

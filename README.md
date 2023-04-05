@@ -3,8 +3,8 @@
 ## Goals
 - [x] Force capital for all input
 - [x] Capital on room input
-- [ ] Create rules engine upon skipping
 - [ ] Disable skip button when clicked
+- [ ] Create rules engine upon skipping
 - [ ] Handle skip functionality for "ALL"
 - [x] Create room objects
 - [ ] Add alert upon closing of a room
