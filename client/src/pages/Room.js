@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Room = ({ socket }) => {
+
+    const navigate = useNavigate();
    
     const [initLoaded, setInitLoaded] = useState(false);
     const [users, setUsers] = useState([]);
@@ -27,6 +29,9 @@ const Room = ({ socket }) => {
             console.log("getRoomInfo received", data);
             updateRoomInfo(data);
         });
+        socket.on('hostLeft', () => {
+            navigate('/');
+        })
 
     }, [socket]);
 

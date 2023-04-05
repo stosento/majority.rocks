@@ -40,8 +40,8 @@ io.on('connection', (socket) => {
     createRoom(data.roomCode, userInfo)
 
     // Add socket to specific room
-    socket.join(data.roomCode)
     console.log(`user ${socket.id} joining room ${data.roomCode}`)
+    socket.join(data.roomCode)
 
     // Emit user list to room
     console.log("Emitting userList to room", roomMap.get(data.roomCode).users);
@@ -59,6 +59,7 @@ io.on('connection', (socket) => {
       addToRoomMap(data.roomCode, userInfo);
 
       io.to(socket.id).emit('joinRoomSuccess', data.roomCode);
+      socket.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users);
     } else {
       io.to(socket.id).emit("joinRoomFailed", data.roomCode);
     }
@@ -80,16 +81,7 @@ io.on('connection', (socket) => {
     console.log(`user ${socket.id} leaving rooms ${new Array(...socket.rooms).join(' ')}`)
     socket.rooms.forEach(roomCode => {
       console.log("Removing from room", roomCode);
-      removeFromRoomMap(roomCode, socket.id);
-
-      // If room still exists
-        //TODO -- add emit back 
-      console.log("Checking room map", roomMap);
-      // Else, room is gone
-        //TODO -- destroy room
-
-      // console.log("getting room map TEST", roomMap.get(roomCode));
-      // io.to(room).emit('userListResponse', roomMap.get(roomCode));
+      removeFromRoomMap(socket, roomCode, socket.id);
     });
   })
 
@@ -118,10 +110,6 @@ function createRoom(roomCode, userInfo) {
     skipRule: SkipRule.EVERYONE
   }
 
-  console.log("createRoom roomCode", roomCode);
-  console.log("createRoom roomInfo", roomInfo);
-  console.log("createRoom roomMap", roomMap);
-
   roomMap.set(roomCode, roomInfo);
 }
 
@@ -140,30 +128,32 @@ function addToRoomMap(key, value) {
 }
 
 // Remove user from our room map
-function removeFromRoomMap(roomCode, userId) {
+function removeFromRoomMap(socket, roomCode, userId) {
 
   // Get room object
   let room = roomMap.get(roomCode);
 
-  // Check if room object is valid
+  // Check to see if room object is valid
   if (room) {
-    console.log("Removing user from Room Map")
-    console.log("Room details", room);
+    if (room.users && isLastUser(roomCode)) {
+      console.log("Deleting room", roomCode);
+      roomMap.delete(roomCode);
+    } else if (room.users && isHost(roomCode, userId)) {
+      console.log("Deleting room", roomCode);
+      roomMap.delete(roomCode);
+      io.to(roomCode).emit("hostLeft");
+      io.in(roomCode).socketsLeave(roomCode);
+    } else {
+      console.log("Removing user from Room Map", room);
+      let users = room.users;
 
-    let users = room.users;
-
-    //Remove current user from room user list
-    users = users.filter((user) => user.socketId !== userId);
-    room.users = users;
-    roomMap.set(roomCode, room);
-
-    // If resulting user list < 1, get rid of the 
-    if (room.users.length < 1) {
-      roomMap = roomMap.delete(roomCode)
+      //Remove current user from room user list
+      users = users.filter((user) => user.socketId !== userId);
+      room.users = users;
+      roomMap.set(roomCode, room);
+      socket.to(roomCode).emit('userListResponse', roomMap.get(roomCode).users);
     }
   }
-
-  console.log("roomMap after remove", roomMap);
 }
 
 // Check if room exists in room map
@@ -177,4 +167,17 @@ function roomIsValid(key) {
     console.log("Room was not found");
   }
   return roomExists
+}
+
+// Check if user is last one in room
+function isLastUser(roomCode) {
+  let users = roomMap.get(roomCode).users;
+  return users.length === 1;
+}
+
+// Check if user is the host
+function isHost(roomCode, userId) {
+  let retVal = false;
+  let host = roomMap.get(roomCode).host;
+  return host.socketId === userId;
 }

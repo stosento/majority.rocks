@@ -57,7 +57,7 @@ const Home = ({ socket }) => {
                     placeholder="Name..."
                     id="name"
                     value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={(e) => setUserName(e.target.value.toUpperCase())}
                 ></input>
             </div>
 
