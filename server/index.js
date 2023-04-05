@@ -74,6 +74,17 @@ io.on('connection', (socket) => {
   socket.on('pressSkip', (roomCode) => {
     console.log('skip pressed');
     //TODO -- add skip to our map, count total
+
+    // Check if skipRule == SINGLE
+    
+      // Emit message to skip song
+
+    // Increment skipCount
+
+    // Call helper method skipSong(rule, skipCount)
+
+    // if (skipSong)
+
   })
 
   // Leaving rooms

@@ -2,7 +2,7 @@
 
 ## Goals
 - [x] Force capital for all input
-- [ ] Capital on room input
+- [x] Capital on room input
 - [ ] Create rules engine upon skipping
 - [ ] Disable skip button when clicked
 - [ ] Handle skip functionality for "ALL"

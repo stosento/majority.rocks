@@ -18,8 +18,8 @@ const RoomCode = (props) => {
                         type="text"
                         placeholder="Code..."
                         id="code"
-                        value={props.value}
-                        onChange={(e) => props.setValue(e.target.value)}
+                        value={props.value.toUpperCase()}
+                        onChange={(e) => props.setValue(e.target.value.toUpperCase())}
                     >    
                     </input>
                     <button 
