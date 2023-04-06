@@ -1,16 +1,12 @@
-const express = require('express')
-const app = express();
+const express = require('express');
 const http = require('http').Server(app);
 const cors = require('cors');
 
 const frontendPort = 3000
 const serverPort = 8888
 
+var app = express();
 app.use(cors())
-
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
 
 const SkipRule = Object.freeze({
   SINGLE:   Symbol("single"),
@@ -76,8 +72,7 @@ io.on('connection', (socket) => {
     let updatedSkipCount = roomInfo.skipCount + 1;
     
     if (shouldSkip(roomInfo.skipRule, updatedSkipCount, roomInfo.users.length)) {
-      let host = roomInfo.host;
-      io.to(roomCode).emit("skipSong"); // host - facilitate spotify skip
+      io.to(roomCode).emit("skipSong", roomInfo.host); // host - facilitate spotify skip
       updatedSkipCount = 0;
     }
     roomInfo.skipCount = updatedSkipCount;
@@ -173,7 +168,7 @@ function roomIsValid(key) {
   } else {
     console.log("Room was not found");
   }
-  return roomExists
+  return roomExists;
 }
 
 // Check if user is last one in room
@@ -184,7 +179,6 @@ function isLastUser(roomCode) {
 
 // Check if user is the host
 function isHost(roomCode, userId) {
-  let retVal = false;
   let host = roomMap.get(roomCode).host;
   return host.socketId === userId;
 }

@@ -32,11 +32,11 @@ const Room = ({ socket }) => {
         socket.on('hostLeft', () => {
             navigate('/');
         });
-        socket.on('skipSong', () => {
-            //Check if I am the host -- then facilitate skip song request to Spotify
-
-            //Reset the state of the skip button
-
+        socket.on('skipSong', (data) => {
+            if (data.socketId === socket.id) {
+                console.log("TODO - SEND SKIP TO SPOTIFY");
+            }
+            setDisableSkip(false);
         });
 
     }, [socket]);
