@@ -10,3 +10,12 @@
 - [ ] Display Spotify playback on screen
 - [ ] Reconnect functionality
 - [ ] Add alert upon closing of a room
+
+## Tech Stack
+
+- Node.js
+  - express
+  - socket.io
+- React w/ React Router
+- TailwindCSS
+ 
