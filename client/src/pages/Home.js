@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import RoomCode from "../components/RoomCode";
 import { initiateSocketConnection, subscribeToChat, disconnectSocket } from "../socketio.service";
-import { useNavigate } from "react-router-dom";
-import generateRoomCode from "../utils";
+import { useNavigate, redirect } from "react-router-dom";
+import { generateRoomCode } from "../utils";
 
 const Home = ({ socket }) => {
+
+    const url = process.env.NODE_ENV !== 'production'
+        ? 'http://localhost:8888/login'
+        : 'https://mytempo.run/login';
 
     const navigate = useNavigate();
 
@@ -31,9 +35,14 @@ const Home = ({ socket }) => {
 
         const roomCode = generateRoomCode();
         localStorage.setItem('userName', userName);
+        localStorage.setItem('roomCode', roomCode);
 
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
-        navigate(`/room/${roomCode}`);
+        console.log(url);
+        window.location.replace(url);
+
+
+        //navigate(`/room/${roomCode}`);
     }
 
     const joinRoom = (e) => {

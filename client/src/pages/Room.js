@@ -1,9 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import SpotifyWebApi from "spotify-web-api-js";
+import SpotifyPlayer from "react-spotify-web-playback";
+import { getTokenFromUrl } from "../utils";
+
+const spotifyApi = new SpotifyWebApi();
 
 const Room = ({ socket }) => {
 
     const navigate = useNavigate();
+
+    const [spotifyToken, setSpotifyToken] = useState("");
+    const [loggedIn, setLoggedIn] = useState(false);
    
     const [initLoaded, setInitLoaded] = useState(false);
     const [users, setUsers] = useState([]);
@@ -15,11 +23,19 @@ const Room = ({ socket }) => {
     useEffect(() => {
 
         if (!initLoaded) {
+            const spotifyToken = getTokenFromUrl().access_token;
+            if (spotifyToken) {
+                setSpotifyToken(spotifyToken);
+                spotifyApi.setAccessToken(spotifyToken);
+                setLoggedIn(true)
+            }
+
+            let roomId = localStorage.getItem("roomCode");
+            setId(roomId);
+
             socket.emit('getRoomInfo', roomId);
             setInitLoaded(true);
         }
-
-        setId(roomId);
 
         socket.on('userListResponse', (data) => {
             console.log("userListResponse received", data);
@@ -35,6 +51,7 @@ const Room = ({ socket }) => {
         socket.on('skipSong', (data) => {
             if (data.socketId === socket.id) {
                 console.log("TODO - SEND SKIP TO SPOTIFY");
+                //Skip next song
             }
             setDisableSkip(false);
         });
@@ -86,6 +103,16 @@ const Room = ({ socket }) => {
                 <h2>Settings</h2>
                 <h3>Room Code: {id}</h3>
             </div>
+        </div>
+        <div className="fixed inset-x-0 bottom-0">
+            <SpotifyPlayer
+                token={spotifyToken}
+                magnifySliderOnHover
+                layout='responsive'
+                styles={{
+                    bgColor: 'white'
+                }}
+            />
         </div>
         </>
     );
