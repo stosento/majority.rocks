@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import RoomCode from "../components/RoomCode";
 import { initiateSocketConnection, subscribeToChat, disconnectSocket } from "../socketio.service";
-import { useNavigate, redirect } from "react-router-dom";
-import { generateRoomCode } from "../utils";
+import { useNavigate } from "react-router-dom";
+import SpotifyWebApi from "spotify-web-api-js";
+import { generateRoomCode, getTokenFromUrl } from "../utils";
+
+const spotifyApi = new SpotifyWebApi();
 
 const Home = ({ socket }) => {
 
@@ -12,45 +15,54 @@ const Home = ({ socket }) => {
 
     const navigate = useNavigate();
 
+    const [authenticated, setAuthenticated] = useState(false);
     const [showCode, setShowCode] = useState(false);
     const [userName, setUserName] = useState("");
     const [inputCode, setInputCode] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
-        console.log("In Home useEffect");
+        setupSpotify();
+
         socket.on("joinRoomFailed", (roomCode) => {
             console.log("Unable to find room");
             setErrorMsg(`Room ${roomCode} does not exist`);
         });
         socket.on("joinRoomSuccess", (roomCode) => {
             console.log("Joining room", roomCode);
-            navigate(`/room/${roomCode}`);
+            navigate(`/room`, { roomInfo: { roomCode }});
         })
 
-    }, [socket]);
+    }, []);
 
     const createRoom = (e) => {
         e.preventDefault();
-
-        const roomCode = generateRoomCode();
-        localStorage.setItem('userName', userName);
-        localStorage.setItem('roomCode', roomCode);
-
-        socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
-        console.log(url);
-        window.location.replace(url);
-
-
-        //navigate(`/room/${roomCode}`);
+        console.log("authenticated", authenticated);
+        authenticated ? navigate('/room') : window.location.replace(url) ;
     }
 
     const joinRoom = (e) => {
         e.preventDefault();
+        localStorage.setItem('action', 'join');
         localStorage.setItem('userName', userName);
 
         console.log(`${userName} joining room`);
         socket.emit('joinRoom', {roomCode: inputCode, userName, socketId: socket.id});
+    }
+
+    const setupSpotify = () => {
+        const urlToken = getTokenFromUrl().access_token;
+        const storageToken = localStorage.getItem("spotifyToken");
+        if (urlToken) {
+            console.log("URL TOKEN");
+            localStorage.setItem("spotifyToken", urlToken);
+            spotifyApi.setAccessToken(urlToken);
+            setAuthenticated(true);
+        } else if (localStorage.getItem("spotifyToken")) {
+            console.log("STORAGE TOKEN");
+            spotifyApi.setAccessToken(storageToken);
+            setAuthenticated(true);
+        }
     }
 
     return (
@@ -76,7 +88,7 @@ const Home = ({ socket }) => {
                         className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-500 text-xl"
                         onClick={createRoom}
                     >
-                        Create Room
+                        {authenticated ? "Create Room" : "Authenticate w/ Spotify to Create Room"}
                     </button>
                 </div>
                 <div className="grid grid-cols-1">

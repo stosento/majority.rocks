@@ -2,10 +2,6 @@ import React, { useState, useEffect } from "react";
 
 const RoomCode = (props) => {
 
-    useEffect(() => {
-        console.log("show", props.show)
-    },[props.show])
-
     return (
         props.show && (
             <div className="transition w-full px-10">

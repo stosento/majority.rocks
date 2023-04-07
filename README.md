@@ -6,7 +6,7 @@
 - [x] Disable skip button when clicked
 - [x] Create rules engine upon skipping
 - [x] Create room objects
-- [ ] Connect host to Spotify
+- [x] Connect host to Spotify
 - [ ] Display Spotify playback on screen
 - [ ] Reconnect functionality
 - [ ] Add alert upon closing of a room
@@ -18,4 +18,3 @@
   - socket.io
 - React w/ React Router
 - TailwindCSS
- 

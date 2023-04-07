@@ -2,39 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 import SpotifyPlayer from "react-spotify-web-playback";
-import { getTokenFromUrl } from "../utils";
+import { generateRoomCode, getTokenFromUrl } from "../utils";
+import { useLocation } from "react-router-dom";
 
 const spotifyApi = new SpotifyWebApi();
 
 const Room = ({ socket }) => {
 
     const navigate = useNavigate();
+    const { roomInfo } = useLocation();
 
     const [spotifyToken, setSpotifyToken] = useState("");
-    const [loggedIn, setLoggedIn] = useState(false);
    
-    const [initLoaded, setInitLoaded] = useState(false);
+    const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [host, setHost] = useState({});
-    const [id, setId] = useState("");
+    const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
-    const { roomId } = useParams();
    
     useEffect(() => {
 
-        if (!initLoaded) {
-            const spotifyToken = getTokenFromUrl().access_token;
-            if (spotifyToken) {
-                setSpotifyToken(spotifyToken);
-                spotifyApi.setAccessToken(spotifyToken);
-                setLoggedIn(true)
-            }
+        setupSpotify();
 
-            let roomId = localStorage.getItem("roomCode");
-            setId(roomId);
-
-            socket.emit('getRoomInfo', roomId);
-            setInitLoaded(true);
+        if (!roomLoaded) {
+            console.log("Room isn't loaded")
+            setupRoom();
         }
 
         socket.on('userListResponse', (data) => {
@@ -58,13 +50,42 @@ const Room = ({ socket }) => {
 
     }, [socket]);
 
+    const setupSpotify = () => {
+        if (!roomInfo) { // We are host, so room needs to be built
+            const spotifyToken = getTokenFromUrl().access_token;
+            if (spotifyToken) {
+                setSpotifyToken(spotifyToken);
+                spotifyApi.setAccessToken(spotifyToken);
+            }
+        }
+    }
+
+    const setupRoom = () => {
+
+        console.log("roomInfo in setupRoom", roomInfo);
+
+        const action = localStorage.getItem('action');
+        const userName = localStorage.getItem('userName');
+
+        if (!roomInfo) {
+            console.log("Generating room code");
+            const roomCode = generateRoomCode();
+            socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
+        } else {
+            console.log("Getting room info");
+            socket.emit('getRoomInfo', roomInfo.roomCode);
+        }
+
+        setRoomLoaded(true);
+    }
+
     const updateUsers = (users) => {
         console.log("Updating my users", users);
         setUsers(users);
     }
 
     const handleSkip = () => {
-        socket.emit("pressSkip", id);
+        socket.emit("pressSkip", roomCode);
         setDisableSkip(true);
     }
 
@@ -72,9 +93,7 @@ const Room = ({ socket }) => {
         console.log("update room info", data);
         setUsers(data.users);
         setHost(data.host);
-
-        console.log("data.users", data.users);
-        console.log("data.host", data.host);
+        setRoomCode(data.roomCode);
     }
 
     return (
@@ -101,7 +120,7 @@ const Room = ({ socket }) => {
             </div>
             <div className="w-full text-center grid-cols-1 pt-8 pb-4 justify-items-center">
                 <h2>Settings</h2>
-                <h3>Room Code: {id}</h3>
+                <h3>Room Code: {roomCode}</h3>
             </div>
         </div>
         <div className="fixed inset-x-0 bottom-0">

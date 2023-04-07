@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const request = require('request');
-const http = require('http').Server(app);
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
@@ -31,6 +30,8 @@ app.use(express.static(path.resolve(__dirname, './app/build')));
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
+
+const http = require('http').createServer(app);
 
 app.get('/login', function(req, res) {
 
@@ -97,6 +98,7 @@ app.get('/callback', function(req, res) {
           console.log(body);
         });
 
+        console.log("kill me")
         // we can also pass the token to the browser to make requests from there
         res.redirect(frontend_uri +
           querystring.stringify({
@@ -172,7 +174,7 @@ io.on('connection', (socket) => {
 
     // Emit user list to room
     console.log("Emitting userList to room", roomMap.get(data.roomCode).users);
-    io.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users);
+    io.to(socket.id).emit("roomInfo", roomMap.get(data.roomCode));
   });
 
   // Joining an existing room
@@ -235,13 +237,9 @@ io.on('connection', (socket) => {
 // });
 
 // Set Server to HTTP
-app.listen(port, () => {
+http.listen(port, () => {
   console.log(`listening at http://localhost:${port}`)
 })
-
-// http.listen(port, () => {
-//   console.log(`listening at http://localhost:${port}`)
-// })
 
 // UTILITY METHODS
 
@@ -249,6 +247,7 @@ function createRoom(roomCode, userInfo) {
 
   //Assume there are no objects for this room at this point
   let roomInfo = {
+    roomCode: roomCode,
     skipCount: 0,
     users: [userInfo],
     host: userInfo,
