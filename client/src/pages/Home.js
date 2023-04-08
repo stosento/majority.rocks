@@ -66,9 +66,14 @@ const Home = ({ socket }) => {
     }
 
     return (
+        <>
         <div className="w-full grid grid-cols-1 justify-items-center">
-            <h1 className="text-center text-4xl">MAJORITY.ROCKS</h1>
-            <div className="w-1/2 pt-8 pb-4">
+            <h1 className="mb-3 text-center font-teko text-7xl">MAJORITY.ROCKS</h1>
+            <div class="border-b-2 border-gray-500 w-1/3 mb-10"></div>
+            <p className="mb-5 text-2xl font-alkatra text-gray-200">
+                An anonymous "vote to skip" application for group listening settings.
+            </p>
+            {/* <div className="w-1/2 pt-8 pb-4">
                 <label className="w-full" for="name"> 
                     Enter your name: 
                 </label>
@@ -80,31 +85,42 @@ const Home = ({ socket }) => {
                     value={userName}
                     onChange={(e) => setUserName(e.target.value.toUpperCase())}
                 ></input>
-            </div>
+            </div> */}
 
-            <div className="w-3/4 grid grid-cols-2">
-                <div className="grid grid-cols-1">
-                    <button 
-                        className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-500 text-xl"
-                        onClick={createRoom}
-                    >
-                        {authenticated ? "Create Room" : "Authenticate w/ Spotify to Create Room"}
-                    </button>
+            <div className="w-1/2">
+
+            
+                <div className="grid grid-cols-2">
+                    <div className="grid grid-cols-1">
+                        <button 
+                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 text-xl"
+                            onClick={createRoom}
+                        >
+                            {authenticated ? "Create Room" : "Authenticate w/ Spotify to Create Room"}
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-1">
+                        <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 text-xl" onClick={() => setShowCode(!showCode)}>
+                            Join Room
+                        </button>
+                        <RoomCode 
+                            show={showCode}
+                            value={inputCode}
+                            setValue={setInputCode}
+                            joinRoom={joinRoom}
+                            errorMsg={errorMsg}
+                        />
+                    </div>
                 </div>
-                <div className="grid grid-cols-1">
-                    <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-500 text-xl" onClick={() => setShowCode(!showCode)}>
-                        Join Room
+
+                <div className="grid grid-rows-1">
+                    <button className="h-10 m-4 px-4 font-bold rounded bg-gray-500 hover:bg-gray-600 text-lg text-gray-200" onClick={() => setShowCode(!showCode)}>
+                        How it works
                     </button>
-                    <RoomCode 
-                        show={showCode}
-                        value={inputCode}
-                        setValue={setInputCode}
-                        joinRoom={joinRoom}
-                        errorMsg={errorMsg}
-                    />
                 </div>
             </div>
         </div>
+        </>
     );
   };
   

@@ -8,6 +8,8 @@ import NoPage from "./pages/NoPage";
 import './App.css';
 import { io } from "socket.io-client";
 import { initiateSocketConnection } from "./socketio.service";
+import Create from "./pages/Create";
+import Join from "./pages/Join";
 
 // const socket = initiateSocketConnection();
 const socket = io.connect('http://localhost:8888')
@@ -19,7 +21,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home socket={socket}/>}/>
-          <Route path="room/" element={<Room socket={socket}/>}/>
+          <Route path="create" element={<Create socket={socket}/>}/>
+          <Route path="join" element={<Join socket={socket}/>}/>
+          <Route path="room" element={<Room socket={socket}/>}/>
           <Route path="room/:roomId" element={<Room socket={socket}/>}/>
           <Route path="*" element={<NoPage />}/>
         </Route>
