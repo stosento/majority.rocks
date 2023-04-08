@@ -15,7 +15,6 @@ const Home = ({ socket }) => {
 
     const navigate = useNavigate();
 
-    const [authenticated, setAuthenticated] = useState(false);
     const [showCode, setShowCode] = useState(false);
     const [userName, setUserName] = useState("");
     const [inputCode, setInputCode] = useState("");
@@ -37,8 +36,7 @@ const Home = ({ socket }) => {
 
     const createRoom = (e) => {
         e.preventDefault();
-        console.log("authenticated", authenticated);
-        authenticated ? navigate('/room') : window.location.replace(url) ;
+        navigate('/create');
     }
 
     const joinRoom = (e) => {
@@ -57,50 +55,36 @@ const Home = ({ socket }) => {
             console.log("URL TOKEN");
             localStorage.setItem("spotifyToken", urlToken);
             spotifyApi.setAccessToken(urlToken);
-            setAuthenticated(true);
         } else if (localStorage.getItem("spotifyToken")) {
             console.log("STORAGE TOKEN");
             spotifyApi.setAccessToken(storageToken);
-            setAuthenticated(true);
         }
     }
 
     return (
         <>
         <div className="w-full grid grid-cols-1 justify-items-center">
-            <h1 className="mb-3 text-center font-teko text-7xl">MAJORITY.ROCKS</h1>
-            <div class="border-b-2 border-gray-500 w-1/3 mb-10"></div>
-            <p className="mb-5 text-2xl font-alkatra text-gray-200">
-                An anonymous "vote to skip" application for group listening settings.
-            </p>
-            {/* <div className="w-1/2 pt-8 pb-4">
-                <label className="w-full" for="name"> 
-                    Enter your name: 
-                </label>
-                <input 
-                    className="w-full px-3 py-3 placeholder-slate-300 text-slate-600 bg-white rounded text-xl uppercase border-0 shadow outline-none focus:outline-none focus:ring"
-                    type="text"
-                    placeholder="Name..."
-                    id="name"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value.toUpperCase())}
-                ></input>
-            </div> */}
-
+            <div className="jusity-items-center my-3 cursor-pointer" onClick={() => {navigate("/");}}>
+                <h1 className="text-center font-teko text-7xl">MAJORITY<span className="text-blue-600">.</span>ROCKS</h1>
+            </div>
             <div className="w-1/2">
-
-            
+                <p className="cent text-center mb-5 text-2xl font-alkatra text-gray-200">
+                    An anonymous "vote to skip" application for group listening settings.
+                </p>
+            </div>
+            <div class="border-b-2 border-gray-500 w-5/12 mb-5"></div>
+            <div className="w-1/2">            
                 <div className="grid grid-cols-2">
                     <div className="grid grid-cols-1">
                         <button 
-                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 text-xl"
+                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
                             onClick={createRoom}
                         >
-                            {authenticated ? "Create Room" : "Authenticate w/ Spotify to Create Room"}
+                            Create Room
                         </button>
                     </div>
                     <div className="grid grid-cols-1">
-                        <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 text-xl" onClick={() => setShowCode(!showCode)}>
+                        <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl" onClick={() => setShowCode(!showCode)}>
                             Join Room
                         </button>
                         <RoomCode 
@@ -114,7 +98,7 @@ const Home = ({ socket }) => {
                 </div>
 
                 <div className="grid grid-rows-1">
-                    <button className="h-10 m-4 px-4 font-bold rounded bg-gray-500 hover:bg-gray-600 text-lg text-gray-200" onClick={() => setShowCode(!showCode)}>
+                    <button className="h-10 m-4 px-4 font-bold rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-lg text-gray-200" onClick={() => setShowCode(!showCode)}>
                         How it works
                     </button>
                 </div>

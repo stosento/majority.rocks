@@ -19,14 +19,14 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        {/* <Route path="/" element={<Layout />}> */}
           <Route index element={<Home socket={socket}/>}/>
           <Route path="create" element={<Create socket={socket}/>}/>
           <Route path="join" element={<Join socket={socket}/>}/>
           <Route path="room" element={<Room socket={socket}/>}/>
           <Route path="room/:roomId" element={<Room socket={socket}/>}/>
           <Route path="*" element={<NoPage />}/>
-        </Route>
+        {/* </Route> */}
       </Routes>
     </Router>
   );

@@ -7,6 +7,8 @@
 - [x] Create rules engine upon skipping
 - [x] Create room objects
 - [x] Connect host to Spotify
+- [ ] Update different pages
+- [ ] Page Transitions
 - [ ] Display Spotify playback on screen
 - [ ] Reconnect functionality
 - [ ] Add alert upon closing of a room
