@@ -35,7 +35,6 @@ const http = require('http').createServer(app);
 
 app.get('/login', function(req, res) {
 
-  console.log("Got to login!");
   console.log("client_id", client_id);
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -172,7 +171,7 @@ io.on('connection', (socket) => {
     socket.join(data.roomCode)
 
     // Emit user list to room
-    console.log("Emitting userList to room", roomMap.get(data.roomCode).users);
+    console.log("Emitting roomInfo to host", roomMap.get(data.roomCode));
     io.to(socket.id).emit("roomInfo", roomMap.get(data.roomCode));
   });
 
@@ -342,7 +341,6 @@ function shouldSkip(skipRule, skipCount, roomCount) {
     console.log("c");
     skip = (roomCount / skipCount) > 2;
   }
-
 
   console.log("ShouldSkip", skip);
   return skip;

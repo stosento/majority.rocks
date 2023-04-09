@@ -35,11 +35,7 @@ const Home = ({ socket }) => {
 
     const joinRoom = (e) => {
         e.preventDefault();
-        localStorage.setItem('action', 'join');
-        localStorage.setItem('userName', userName);
-
-        console.log(`${userName} joining room`);
-        socket.emit('joinRoom', {roomCode: inputCode, userName, socketId: socket.id});
+        navigate('/join');
     }
 
     return (
@@ -65,16 +61,11 @@ const Home = ({ socket }) => {
                         </button>
                     </div>
                     <div className="grid grid-cols-1">
-                        <button className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl" onClick={() => setShowCode(!showCode)}>
+                        <button 
+                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl" 
+                            onClick={joinRoom}>
                             Join Room
                         </button>
-                        <RoomCode 
-                            show={showCode}
-                            value={inputCode}
-                            setValue={setInputCode}
-                            joinRoom={joinRoom}
-                            errorMsg={errorMsg}
-                        />
                     </div>
                 </div>
 

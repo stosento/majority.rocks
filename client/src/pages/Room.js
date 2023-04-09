@@ -22,7 +22,7 @@ const Room = ({ socket }) => {
    
     useEffect(() => {
 
-        setupSpotify();
+        console.log("Rerender Room");
 
         if (!roomLoaded) {
             console.log("Room isn't loaded")
@@ -64,13 +64,8 @@ const Room = ({ socket }) => {
 
         console.log("roomInfo in setupRoom", roomInfo);
 
-        const action = localStorage.getItem('action');
-        const userName = localStorage.getItem('userName');
-
         if (!roomInfo) {
             console.log("Generating room code");
-            const roomCode = generateRoomCode();
-            socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
         } else {
             console.log("Getting room info");
             socket.emit('getRoomInfo', roomInfo.roomCode);

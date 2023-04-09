@@ -4,8 +4,9 @@
 - [x] Create Room
     - [x] Execute the create room logic on server
     - [x] Update the options
-- [ ] Join Room
-    - [ ] Create basics
+    - [x] Update the Room page upon Creation
+- [x] Join Room
+    - [x] Create basics
 - [ ] Room Page
     - [ ] Socket emissions
 - [ ] Page Transitions
