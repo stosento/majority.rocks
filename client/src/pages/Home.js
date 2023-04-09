@@ -68,7 +68,7 @@ const Home = ({ socket }) => {
                 <h1 className="text-center font-teko text-7xl">MAJORITY<span className="text-blue-600">.</span>ROCKS</h1>
             </div>
             <div className="w-1/2">
-                <p className="cent text-center mb-5 text-2xl font-alkatra text-gray-200">
+                <p className="cent text-center mb-5 text-lg font-alkatra text-gray-200">
                     An anonymous "vote to skip" application for group listening settings.
                 </p>
             </div>

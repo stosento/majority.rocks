@@ -1,12 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
 
 const Create = ({ socket }) => {
 
     const [userName, setUserName] = useState(localStorage.getItem("userName"));
     const [skipRule, setSkipRule] = useState("");
 
-    const options = {};
+    const options = [
+        {value: "blah", label: "blah"},
+        {value: "test", label: "test"}
+    ];
 
     const navigate = useNavigate();
 
@@ -27,7 +34,7 @@ const Create = ({ socket }) => {
                     Enter your name: 
                 </label>
                 <input 
-                    className="w-full p-2 uppercase bg-gray-900 border border-gray-400 rounded-md transition duration-500 ease-in-out hover:border-blue-700 focus:outline-none focus:border-blue-700"
+                    className="w-full p-2 uppercase bg-gray-900 border border-gray-400 rounded-md transition duration-300 ease-in-out hover:border-blue-700 focus:outline-none focus:border-blue-700"
                     type="text"
                     placeholder="Name..."
                     id="name"
@@ -47,18 +54,17 @@ const Create = ({ socket }) => {
                     value={skipRule}
                     isClearable 
                     styles={{
+                            control: (base) => ({
+                                ...base,
+                                background: 'rgb(17 24 39)'
+                            }),
+                            menu: (base) => ({
+                                ...base,
+                                background: 'black'
+                            }),
                             option: (base) => ({
                                 ...base,
-                                color: 'black'
-                            }),
-                            multiValue: (base) => ({
-                                ...base,
-                                color: '#fff',
-                                background: '#1A3039'
-                            }),
-                            multiValueLabel: (base) => ({
-                                ...base,
-                                color: '#fff'
+                                color: 'white'
                             })
                     }}
                 />
