@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import WideButton from "../components/WideButton";
@@ -6,17 +6,28 @@ import { useNavigate } from "react-router-dom";
 
 const Join = ({ socket }) => {
 
-    const [userName, setUserName] = useState(localStorage.getItem("userName"));
-    const [roomCode, setRoomCode] = useState("");
-
     const navigate = useNavigate();
+
+    const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+    const [roomCode, setRoomCode] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+
+    useEffect(() => {
+
+        socket.on("joinRoomFailed", (roomCode) => {
+            console.log("Unable to find room");
+            setErrorMsg(`Room ${roomCode} does not exist`);
+        });
+        socket.on("joinRoomSuccess", (roomCode) => {
+            console.log("Joining room", roomCode);
+            navigate(`/room`, { state: roomCode });
+        })
+
+    }, []);
 
     const joinRoom = (e) => {
         e.preventDefault();
-
         socket.emit('joinRoom', {userName, roomCode, socketId: socket.id})
-
-        navigate('/room');
     }
 
     return (

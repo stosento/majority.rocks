@@ -17,7 +17,7 @@ const SkipRule = Object.freeze({
 
 const Create = ({ socket, spotifyApi }) => {
 
-    const [userName, setUserName] = useState(localStorage.getItem("userName"));
+    const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
     const [skipRule, setSkipRule] = useState("");
 
     const navigate = useNavigate();

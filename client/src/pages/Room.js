@@ -10,7 +10,9 @@ const spotifyApi = new SpotifyWebApi();
 const Room = ({ socket }) => {
 
     const navigate = useNavigate();
-    const { roomInfo } = useLocation();
+    const location = useLocation();
+
+    const code = location.state;
 
     const [spotifyToken, setSpotifyToken] = useState("");
    
@@ -25,8 +27,9 @@ const Room = ({ socket }) => {
         console.log("Rerender Room");
 
         if (!roomLoaded) {
-            console.log("Room isn't loaded")
+            console.log("Room isn't loaded");
             setupRoom();
+            setRoomLoaded(true);
         }
 
         socket.on('userListResponse', (data) => {
@@ -48,10 +51,10 @@ const Room = ({ socket }) => {
             setDisableSkip(false);
         });
 
-    }, [socket]);
+    }, []);
 
     const setupSpotify = () => {
-        if (!roomInfo) { // We are host, so room needs to be built
+        if (!code) { // We are host, so room needs to be built
             const spotifyToken = getTokenFromUrl().access_token;
             if (spotifyToken) {
                 setSpotifyToken(spotifyToken);
@@ -61,17 +64,10 @@ const Room = ({ socket }) => {
     }
 
     const setupRoom = () => {
-
-        console.log("roomInfo in setupRoom", roomInfo);
-
-        if (!roomInfo) {
-            console.log("Generating room code");
-        } else {
-            console.log("Getting room info");
-            socket.emit('getRoomInfo', roomInfo.roomCode);
+        console.log("setting up room info", code);        
+        if (code) {
+            socket.emit('getRoomInfo', code);
         }
-
-        setRoomLoaded(true);
     }
 
     const updateUsers = (users) => {
