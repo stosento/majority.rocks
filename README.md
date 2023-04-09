@@ -1,13 +1,13 @@
 # majority.rocks
 
-## Goals
-- [x] Force capital for all input
-- [x] Capital on room input
-- [x] Disable skip button when clicked
-- [x] Create rules engine upon skipping
-- [x] Create room objects
-- [x] Connect host to Spotify
-- [ ] Update different pages
+## Todo
+- [x] Create Room
+    - [x] Execute the create room logic on server
+    - [x] Update the options
+- [ ] Join Room
+    - [ ] Create basics
+- [ ] Room Page
+    - [ ] Socket emissions
 - [ ] Page Transitions
 - [ ] Display Spotify playback on screen
 - [ ] Reconnect functionality

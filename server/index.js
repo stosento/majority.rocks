@@ -9,7 +9,7 @@ require('dotenv').config({path: '../.env'});
 const client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 const redirect_uri = process.env.SPOTIFY_REDIRECT_URI; // Your redirect uri
-const frontend_uri = process.env.SPOTIFY_FRONTEND_URI + '#';
+const frontend_uri = process.env.SPOTIFY_FRONTEND_URI;
 const port = process.env.PORT || 8888;
 const frontendPort = 3000
 
@@ -98,15 +98,14 @@ app.get('/callback', function(req, res) {
           console.log(body);
         });
 
-        console.log("kill me")
         // we can also pass the token to the browser to make requests from there
-        res.redirect(frontend_uri +
+        res.redirect(frontend_uri + '/create' + '#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
       } else {
-        res.redirect(frontend_uri +
+        res.redirect(frontend_uri + '#' + 
           querystring.stringify({
             error: 'invalid_token'
           }));

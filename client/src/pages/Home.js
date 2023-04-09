@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 import RoomCode from "../components/RoomCode";
-import { initiateSocketConnection, subscribeToChat, disconnectSocket } from "../socketio.service";
 import { useNavigate } from "react-router-dom";
-import SpotifyWebApi from "spotify-web-api-js";
-import { generateRoomCode, getTokenFromUrl } from "../utils";
-
-const spotifyApi = new SpotifyWebApi();
 
 const Home = ({ socket }) => {
 
-    const url = process.env.NODE_ENV !== 'production'
+    const loginUrl = process.env.NODE_ENV !== 'production'
         ? 'http://localhost:8888/login'
-        : 'https://mytempo.run/login';
+        : 'https://majority.rocks/login';
 
     const navigate = useNavigate();
 
@@ -21,7 +16,6 @@ const Home = ({ socket }) => {
     const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
-        setupSpotify();
 
         socket.on("joinRoomFailed", (roomCode) => {
             console.log("Unable to find room");
@@ -36,7 +30,7 @@ const Home = ({ socket }) => {
 
     const createRoom = (e) => {
         e.preventDefault();
-        navigate('/create');
+        window.location.replace(loginUrl);
     }
 
     const joinRoom = (e) => {
@@ -46,19 +40,6 @@ const Home = ({ socket }) => {
 
         console.log(`${userName} joining room`);
         socket.emit('joinRoom', {roomCode: inputCode, userName, socketId: socket.id});
-    }
-
-    const setupSpotify = () => {
-        const urlToken = getTokenFromUrl().access_token;
-        const storageToken = localStorage.getItem("spotifyToken");
-        if (urlToken) {
-            console.log("URL TOKEN");
-            localStorage.setItem("spotifyToken", urlToken);
-            spotifyApi.setAccessToken(urlToken);
-        } else if (localStorage.getItem("spotifyToken")) {
-            console.log("STORAGE TOKEN");
-            spotifyApi.setAccessToken(storageToken);
-        }
     }
 
     return (

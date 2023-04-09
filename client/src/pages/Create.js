@@ -2,20 +2,50 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { generateRoomCode, getTokenFromUrl } from "../utils";
 
 const animatedComponents = makeAnimated();
+const SkipRule = Object.freeze({
+    SINGLE:   Symbol("single"),
+    MAJORITY:  Symbol("majority"),
+    EVERYONE: Symbol("everyone")
+  });
 
-const Create = ({ socket }) => {
+const Create = ({ socket, spotifyApi }) => {
 
     const [userName, setUserName] = useState(localStorage.getItem("userName"));
     const [skipRule, setSkipRule] = useState("");
 
     const options = [
-        {value: "blah", label: "blah"},
-        {value: "test", label: "test"}
+        {value: SkipRule.SINGLE.toString, label: "Single"},
+        {value: SkipRule.MAJORITY.toString, label: "Majority"},
+        {value: SkipRule.EVERYONE.toString, label: "Everyone"}
     ];
 
     const navigate = useNavigate();
+
+    const createRoom = (e) => {
+        e.preventDefault();
+        setupSpotify();
+
+        const roomCode = generateRoomCode();
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
+
+        navigate('/room');
+    }
+
+    const setupSpotify = () => {
+        const urlToken = getTokenFromUrl().access_token;
+        const storageToken = localStorage.getItem("spotifyToken");
+        if (urlToken) {
+            console.log("URL TOKEN");
+            localStorage.setItem("spotifyToken", urlToken);
+            spotifyApi.setAccessToken(urlToken);
+        } else if (localStorage.getItem("spotifyToken")) {
+            console.log("STORAGE TOKEN");
+            spotifyApi.setAccessToken(storageToken);
+        }
+    }
 
     return (
 <>
@@ -29,8 +59,8 @@ const Create = ({ socket }) => {
                 </div>
 
             </div>
-            <div className="w-2/3 pt-8 pb-4">
-                <label className="w-full" for="name"> 
+            <div className="w-2/3 pt-4 pb-4">
+                <label className="w-full block pb-1" for="name"> 
                     Enter your name: 
                 </label>
                 <input 
@@ -42,18 +72,19 @@ const Create = ({ socket }) => {
                     onChange={(e) => setUserName(e.target.value.toUpperCase())}
                 ></input>
             </div>
-            <div className="w-2/3 pt-8 pb-4">
-                <label className="w-full" for="skipRule"> 
+            <div className="w-2/3 pt-4 pb-2">
+                <label className="w-full block pb-1" for="skipRule"> 
                     Choose your skip rule:
                 </label>
                 <div className="cursor-pointer">
                 <Select 
                     closeMenuOnSelect={true}
                     components={animatedComponents}
+                    placeholder="SELECT..."
                     defaultValue={options[1]}
                     options={options}
                     onChange={setSkipRule}
-                    value={skipRule.toUpperCase}
+                    value={skipRule}
                     isClearable 
                     styles={{
                             control: (base, {isFocused, menuIsOpen}) => ({
@@ -65,6 +96,8 @@ const Create = ({ socket }) => {
                                 paddingTop: 2,
                                 transition: 'ease-in-out',
                                 transitionDuration: '300ms',
+                                color: '#9CA3AF',
+                                cursor: 'pointer',
                                 '&:hover': {
                                     borderColor: 'rgb(29 78 216)'
                                 }
@@ -73,25 +106,35 @@ const Create = ({ socket }) => {
                                 ...base,
                                 background: 'rgb(17 24 39)'
                             }),
-                            option: (base) => ({
-                                ...base,
-                                color: 'white'
-                            }),
                             placeholder: (base) => ({
                                 ...base,
                                 color: '#9CA3AF'
                             }),
                             singleValue: (base) => ({
                                 ...base,
-                                color: '#9CA3AF'
+                                color: 'white'
+                            }),
+                            input: (base) => ({
+                                ...base,
+                                color: 'white'
                             }),
                             option: (base, { isFocused, isSelected }) => ({
                                 ...base,
+                                color: 'white',
+                                cursor: 'pointer',
                                 background: isFocused ? 'rgb(31 41 55)' : 'rgb(17 24 39)'
                             }),
 
                     }}
                 />
+                </div>
+                <div className="grid grid-cols-1 mt-8">
+                    <button 
+                        className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                        onClick={createRoom}
+                    >
+                        Create Room
+                    </button>
                 </div>
             </div>
         </div>
