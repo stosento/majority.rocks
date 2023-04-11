@@ -46,6 +46,7 @@ const Join = ({ socket }) => {
                     label="Enter the room code"
                     placeholder="Rome code..."
                     value={roomCode}
+                    length={4}
                     cb={setRoomCode}
                 />
                 <WideButton

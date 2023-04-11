@@ -17,17 +17,17 @@ const SkipRule = Object.freeze({
 
 const Create = ({ socket, spotifyApi }) => {
 
-    const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
-    const [skipRule, setSkipRule] = useState("");
-
-    const navigate = useNavigate();
-
     const options = [
         {value: SkipRule.SINGLE.toString, label: "Single"},
         {value: SkipRule.MAJORITY.toString, label: "Majority"},
         {value: SkipRule.EVERYONE.toString, label: "Everyone"}
     ];
 
+    const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+    const [skipRule, setSkipRule] = useState(options[1]);
+
+    const navigate = useNavigate();
+    
     const setupSpotify = () => {
         const urlToken = getTokenFromUrl().access_token;
         const storageToken = localStorage.getItem("spotifyToken");

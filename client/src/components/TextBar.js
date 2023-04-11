@@ -1,4 +1,4 @@
-const TextBar = ({ id, label, placeholder, value, cb }) => {
+const TextBar = ({ id, label, placeholder, value, length, cb }) => {
 
     return (
         <div className="pt-4 pb-4">
@@ -8,6 +8,7 @@ const TextBar = ({ id, label, placeholder, value, cb }) => {
             <input 
                 className="w-full p-2 uppercase bg-gray-900 border border-gray-400 rounded-md transition duration-300 ease-in-out hover:border-blue-700 focus:outline-none focus:border-blue-700"
                 type="text"
+                maxLength={length ? length : null}
                 placeholder={placeholder}
                 id={id}
                 value={value}
