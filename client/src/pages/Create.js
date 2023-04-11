@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -24,6 +24,11 @@ const Create = ({ socket, spotifyApi }) => {
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
     const [skipRule, setSkipRule] = useState(options[1]);
+    const [spotifyAccessToken, setSpotifyAccessToken] = useState("");
+
+    useEffect(() => {
+        setupSpotify();
+    }, [])
 
     const navigate = useNavigate();
 
@@ -31,23 +36,23 @@ const Create = ({ socket, spotifyApi }) => {
         const urlToken = getTokenFromUrl().access_token;
         const storageToken = localStorage.getItem("spotifyToken");
         if (urlToken) {
-            console.log("URL TOKEN");
+            console.log("URL TOKEN", urlToken);
             localStorage.setItem("spotifyToken", urlToken);
+            setSpotifyAccessToken(urlToken);
             spotifyApi.setAccessToken(urlToken);
         } else if (localStorage.getItem("spotifyToken")) {
             console.log("STORAGE TOKEN");
             spotifyApi.setAccessToken(storageToken);
+            setSpotifyAccessToken(storageToken);
         }
     }
 
     const createRoom = (e) => {
         e.preventDefault();
-        setupSpotify();
 
         const roomCode = generateRoomCode();
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
-
-        navigate('/room');
+        navigate('/room', {state: {token: spotifyAccessToken}});
     }
 
     return (

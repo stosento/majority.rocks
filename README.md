@@ -8,6 +8,9 @@
 - [x] Join Room
     - [x] Create basics
 - [ ] Room Page
+    - [x] Fix spotify authentication issue
+    - [ ] Design host / listeners
+    - [ ] Skip rule text display
     - [ ] Socket emissions
 - [ ] Page Transitions
 - [ ] Display Spotify playback on screen
