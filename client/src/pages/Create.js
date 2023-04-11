@@ -8,7 +8,6 @@ import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";
 import WideButton from "../components/WideButton";
 
-
 const SkipRule = Object.freeze({
     SINGLE:   Symbol("single"),
     MAJORITY:  Symbol("majority"),
@@ -27,7 +26,7 @@ const Create = ({ socket, spotifyApi }) => {
     const [skipRule, setSkipRule] = useState(options[1]);
 
     const navigate = useNavigate();
-    
+
     const setupSpotify = () => {
         const urlToken = getTokenFromUrl().access_token;
         const storageToken = localStorage.getItem("spotifyToken");
