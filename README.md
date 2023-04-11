@@ -9,6 +9,7 @@
     - [x] Create basics
 - [ ] Room Page
     - [x] Fix spotify authentication issue
+    - [ ] Display playback
     - [ ] Design host / listeners
     - [ ] Skip rule text display
     - [ ] Socket emissions

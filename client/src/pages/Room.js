@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 import SpotifyPlayer from "react-spotify-web-playback";
+
 import { generateRoomCode, getTokenFromUrl } from "../utils";
 import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
@@ -71,6 +72,10 @@ const Room = ({ socket }) => {
         }
     }
 
+    const testPlaybackChange = (state) => {
+        console.log("Playback has bchanged", state);
+    }
+
     const setupRoom = () => {
         if (code) {
             socket.emit('getRoomInfo', code);
@@ -81,9 +86,10 @@ const Room = ({ socket }) => {
         const element = {
             artist: playback.artists[0].name,
             song: playback.name,
-            image: playback.album.images[2]
+            image: playback.album.images[0].url
         }
         setCurrentPlayback(element);
+        console.log(playback);
     }
 
     const updateUsers = (users) => {
@@ -117,9 +123,9 @@ const Room = ({ socket }) => {
                     </ul>
                 </div>
                 <div className="w-1/2 text-center">
-                    <div>
-                            Artist {currentPlayback.artist}
-                            Song {currentPlayback.song}
+                    <div className="flex flex-col justify-center items-center">
+                        <img className="h-52" src={currentPlayback.image}/>
+                        <p>{currentPlayback.artist} - {currentPlayback.song}</p>
                     </div>
                     <div className="grid-flow-col grid-cols-2 flex">
                         <button
@@ -140,6 +146,8 @@ const Room = ({ socket }) => {
             <div className="fixed inset-x-0 bottom-0">
                 <SpotifyPlayer
                     token={spotifyToken}
+                    syncExternalDevice
+                    callback={state => testPlaybackChange(state)}
                     magnifySliderOnHover
                     layout='responsive'
                     styles={{
