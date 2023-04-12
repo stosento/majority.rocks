@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
-import SpotifyPlayer from "react-spotify-web-playback";
+
 
 import { generateRoomCode, getTokenFromUrl } from "../utils";
 import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
+import PlayerWrapper from "../components/PlayerWrapper";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -17,17 +18,15 @@ const Room = ({ socket }) => {
     const code = location.state;
 
     const [spotifyToken, setSpotifyToken] = useState(location.state.token);
-   
+    const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [host, setHost] = useState({});
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
-   
-    useEffect(() => {
 
-        console.log("Rerender Room");
+    useEffect(() => {
 
         if (!roomLoaded) {
             console.log("Room isn't loaded");
@@ -58,22 +57,38 @@ const Room = ({ socket }) => {
     }, []);
 
     const setupSpotify = () => {
-        console.log(spotifyToken)
         if (code) { // We are host, so room needs to be built
-            console.log("code", code);
-            console.log("spotifyToken", spotifyToken);
             if (spotifyToken) {
                 console.log("setting spotify")
                 spotifyApi.setAccessToken(spotifyToken);
                 spotifyApi.getMyCurrentPlayingTrack().then((result) => {
                     updatePlayback(result.item);
-                })
+                });
+                spotifyApi.getMyCurrentPlaybackState().then((result) => {
+                    console.log("currentplayback", result);
+                });
+                spotifyApi.getMyDevices().then((result) => {
+                    console.log("avaialbledevices", result);
+                });
             }
         }
     }
 
-    const testPlaybackChange = (state) => {
-        console.log("Playback has bchanged", state);
+    const handlePlayerChange = (state) => {
+        if (currentDevice !== "MajorityRocks") {
+            const webPlayer = getWebPlayer(state);
+            console.log("webPlayer", webPlayer);
+            spotifyApi.transferMyPlayback([webPlayer.id]).then((result) => {
+                setCurrentDevice(webPlayer.name);     
+            })
+        }
+    } 
+
+    const getWebPlayer = (state) => {
+        const devices = state.devices;
+        console.log("devices", devices);
+        const device = devices.filter(item => item.name === 'MajorityRocks')[0];
+        return device;
     }
 
     const setupRoom = () => {
@@ -144,15 +159,9 @@ const Room = ({ socket }) => {
                 </div>
             </div>
             <div className="fixed inset-x-0 bottom-0">
-                <SpotifyPlayer
-                    token={spotifyToken}
-                    syncExternalDevice
-                    callback={state => testPlaybackChange(state)}
-                    magnifySliderOnHover
-                    layout='responsive'
-                    styles={{
-                        bgColor: 'white'
-                    }}
+                <PlayerWrapper
+                    spotifyApi={spotifyApi}
+                    spotifyToken={spotifyToken}
                 />
             </div> 
         </div>

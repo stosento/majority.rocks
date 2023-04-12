@@ -7,7 +7,7 @@ const Dropdown = ({ id, label, placeholder, options, value, cb }) => {
     
     return (
     <div className="pt-4 pb-4">
-        <label className="w-full block pb-1" for={id}> 
+        <label className="w-full block pb-1" htmlFor={id}> 
             {label}
         </label>
         <div className="cursor-pointer">

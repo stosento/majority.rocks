@@ -5,7 +5,7 @@ const RoomCode = (props) => {
     return (
         props.show && (
             <div className="transition w-full px-10">
-                <label className="w-full px-4" for="code"> 
+                <label className="w-full px-4" htmlFor="code"> 
                     Enter room code: 
                 </label>
                 <div className="w-full">

@@ -49,7 +49,7 @@ const Home = ({ socket }) => {
                     An anonymous "vote to skip" application for group listening settings.
                 </p>
             </div>
-            <div class="border-b-2 border-gray-500 w-5/12 mb-5"></div>
+            <div className="border-b-2 border-gray-500 w-5/12 mb-5"></div>
             <div className="w-1/2">            
                 <div className="grid grid-cols-2">
                     <div className="grid grid-cols-1">

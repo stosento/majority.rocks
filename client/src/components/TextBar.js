@@ -2,7 +2,7 @@ const TextBar = ({ id, label, placeholder, value, length, cb }) => {
 
     return (
         <div className="pt-4 pb-4">
-            <label className="w-full block pb-1" for={id}> 
+            <label className="w-full block pb-1" htmlFor={id}> 
                 {label}
             </label>
             <input 
