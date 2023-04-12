@@ -52,7 +52,7 @@ const Create = ({ socket, spotifyApi }) => {
 
         const roomCode = generateRoomCode();
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
-        navigate('/room', {state: {token: spotifyAccessToken}});
+        navigate('/room', {state: {token: spotifyAccessToken, roomCode, host: { userName, socketId: socket.id}}});
     }
 
     return (

@@ -15,19 +15,6 @@ const Home = ({ socket }) => {
     const [inputCode, setInputCode] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
 
-    useEffect(() => {
-
-        socket.on("joinRoomFailed", (roomCode) => {
-            console.log("Unable to find room");
-            setErrorMsg(`Room ${roomCode} does not exist`);
-        });
-        socket.on("joinRoomSuccess", (roomCode) => {
-            console.log("Joining room", roomCode);
-            navigate(`/room`, { roomInfo: { roomCode }});
-        })
-
-    }, []);
-
     const createRoom = (e) => {
         e.preventDefault();
         window.location.replace(loginUrl);

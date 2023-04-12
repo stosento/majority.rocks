@@ -15,13 +15,14 @@ const Room = ({ socket }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const code = location.state;
+    console.log("location", location);
+    const state = location.state;
 
-    const [spotifyToken, setSpotifyToken] = useState(location.state.token);
+    const [spotifyToken, setSpotifyToken] = useState(state.token);
     const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
-    const [host, setHost] = useState({});
+    const [host, setHost] = useState(state.host);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
@@ -30,8 +31,10 @@ const Room = ({ socket }) => {
 
         if (!roomLoaded) {
             console.log("Room isn't loaded");
+            if (spotifyToken) {
+                setupSpotify();
+            }
             setupRoom();
-            setupSpotify();
             setRoomLoaded(true);
         }
 
@@ -56,44 +59,26 @@ const Room = ({ socket }) => {
 
     }, []);
 
-    const setupSpotify = () => {
-        if (code) { // We are host, so room needs to be built
-            if (spotifyToken) {
-                console.log("setting spotify")
-                spotifyApi.setAccessToken(spotifyToken);
-                spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-                    updatePlayback(result.item);
-                });
-                spotifyApi.getMyCurrentPlaybackState().then((result) => {
-                    console.log("currentplayback", result);
-                });
-                spotifyApi.getMyDevices().then((result) => {
-                    console.log("avaialbledevices", result);
-                });
-            }
+    const setupSpotify = () => { // We are host, so room needs to be built
+        if (spotifyToken) {
+            console.log("setting spotify")
+            spotifyApi.setAccessToken(spotifyToken);
+            spotifyApi.getMyCurrentPlayingTrack().then((result) => {
+                updatePlayback(result.item);
+            });
+            spotifyApi.getMyCurrentPlaybackState().then((result) => {
+                console.log("currentplayback", result);
+            });
+            spotifyApi.getMyDevices().then((result) => {
+                console.log("avaialbledevices", result);
+            });
         }
-    }
-
-    const handlePlayerChange = (state) => {
-        if (currentDevice !== "MajorityRocks") {
-            const webPlayer = getWebPlayer(state);
-            console.log("webPlayer", webPlayer);
-            spotifyApi.transferMyPlayback([webPlayer.id]).then((result) => {
-                setCurrentDevice(webPlayer.name);     
-            })
-        }
-    } 
-
-    const getWebPlayer = (state) => {
-        const devices = state.devices;
-        console.log("devices", devices);
-        const device = devices.filter(item => item.name === 'MajorityRocks')[0];
-        return device;
     }
 
     const setupRoom = () => {
-        if (code) {
-            socket.emit('getRoomInfo', code);
+        if (state.code) {
+            console.log("getting room info in setup room");
+            socket.emit('getRoomInfo', state.code);
         }
     }
 
@@ -130,6 +115,7 @@ const Room = ({ socket }) => {
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1">
                     <h2 className="font-teko text-3xl">Host:</h2>
+                    <p>{host.userName}</p>
                     <h2 className="font-teko text-3xl">Listeners:</h2>
                     <ul className="list-disc list-inside">
                         {users.map((user) => (
