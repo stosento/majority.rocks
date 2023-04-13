@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { generateRoomCode, getTokenFromUrl } from "../utils";
+import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";

@@ -1,3 +1,5 @@
+const colors = require('./colors');
+
 const express = require('express');
 const path = require('path');
 const request = require('request');
@@ -179,7 +181,14 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (data) => {
 
     if (roomIsValid(data.roomCode)) {
-      const userInfo = {userName: data.userName, socketId: data.socketId};
+      let [color, updatedColors] = getRandomColor(availableColors);
+      availableColors = updatedColors;
+
+      const userInfo = {
+        userName: data.userName, 
+        color: color,
+        socketId: data.socketId
+      };
       console.log(`user ${socket.id} joining room ${data.roomCode}`);
 
       socket.join(data.roomCode);
@@ -241,14 +250,33 @@ http.listen(port, () => {
 
 // UTILITY METHODS
 
+let availableColors = colors;
+
+function getRandomColor(colors) {
+  const index = Math.floor(Math.random() * colors.length);
+  const color = colors[index];
+  colors.splice(index, 1);
+  console.log("color", color);
+  return [color, colors];
+}
+
 function createRoom(roomCode, userInfo) {
+
+  let [color, updatedColors] = getRandomColor(availableColors);
+  availableColors = updatedColors;
+
+  let info = userInfo;
+  info.color = color;
+
+  console.log("color in create room", color);
+  console.log("info.color", info.color);
 
   //Assume there are no objects for this room at this point
   let roomInfo = {
     roomCode: roomCode,
     skipCount: 0,
-    users: [userInfo],
-    host: userInfo,
+    users: [],
+    host: info,
     skipRule: SkipRule.EVERYONE
   }
 

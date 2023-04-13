@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 
 
-import { generateRoomCode, getTokenFromUrl } from "../utils";
+import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
 import PlayerWrapper from "../components/PlayerWrapper";
@@ -22,7 +22,7 @@ const Room = ({ socket }) => {
     const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
-    const [host, setHost] = useState(state.host);
+    const [host, setHost] = useState(state.host ? state.host : null);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
@@ -114,14 +114,20 @@ const Room = ({ socket }) => {
             <RoomHeader code={roomCode}/>
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1">
-                    <h2 className="font-teko text-3xl">Host:</h2>
-                    <p>{host.userName}</p>
-                    <h2 className="font-teko text-3xl">Listeners:</h2>
-                    <ul className="list-disc list-inside">
-                        {users.map((user) => (
-                            <li key={user.socketId}>{user.userName}</li>
+                    <div className="flex mb-3">
+                        <h2 className="font-teko text-3xl mr-4">Host:</h2>
+                        <div className="rounded-lg p-1" style={{backgroundColor: host.color}}>
+                            <p>{host.userName}</p>
+                        </div>
+                    </div>
+                    <div className="flex">
+                        <h2 className="font-teko text-3xl mr-4">Listeners:</h2>
+                         {users.map((user) => (
+                            <div className="rounded-lg p-1" style={{backgroundColor: user.color}}>
+                                {user.userName}
+                            </div>
                         ))}
-                    </ul>
+                    </div>
                 </div>
                 <div className="w-1/2 text-center">
                     <div className="flex flex-col justify-center items-center">
