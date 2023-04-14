@@ -130,10 +130,12 @@ const Room = ({ socket }) => {
                     </div>
                 </div>
                 <div className="w-1/2 text-center">
+                    {currentPlayback.song ? 
                     <div className="flex flex-col justify-center items-center">
                         <img className="h-52" src={currentPlayback.image}/>
                         <p>{currentPlayback.artist} - {currentPlayback.song}</p>
                     </div>
+                    : <></>}
                     <div className="grid-flow-col grid-cols-2 flex">
                         <button
                             className="w-1/4 h-24 my-4 mx-1 font-bold text-xl rounded bg-blue-500 hover:bg-blue-700 disabled:bg-blue-950"
