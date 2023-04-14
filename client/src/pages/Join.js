@@ -20,7 +20,7 @@ const Join = ({ socket }) => {
         });
         socket.on("joinRoomSuccess", (roomCode) => {
             console.log("Joining room", roomCode);
-            navigate(`/room`, { state: roomCode });
+            navigate(`/room`, { state: { code: roomCode } });
         })
 
     }, []);

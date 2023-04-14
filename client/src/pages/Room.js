@@ -7,6 +7,10 @@ import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
 import PlayerWrapper from "../components/PlayerWrapper";
+import HostInfo from "../components/HostInfo";
+import Listeners from "../components/Listeners";
+import Playback from "../components/Playback";
+import RoomButtons from "../components/RoomButtons";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -18,7 +22,7 @@ const Room = ({ socket }) => {
     console.log("location", location);
     const state = location.state;
 
-    const [spotifyToken, setSpotifyToken] = useState(state.token);
+    const [spotifyToken, setSpotifyToken] = useState(state.token? state.token : null);
     const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
@@ -28,6 +32,7 @@ const Room = ({ socket }) => {
     const [currentPlayback, setCurrentPlayback] = useState({});
 
     useEffect(() => {
+        console.log("in room useeffect");
 
         if (!roomLoaded) {
             console.log("Room isn't loaded");
@@ -76,6 +81,7 @@ const Room = ({ socket }) => {
     }
 
     const setupRoom = () => {
+        console.log("In the setupRoom", state);
         if (state.code) {
             console.log("getting room info in setup room");
             socket.emit('getRoomInfo', state.code);
@@ -114,50 +120,25 @@ const Room = ({ socket }) => {
             <RoomHeader code={roomCode}/>
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1">
-                    <div className="flex mb-3">
-                        <h2 className="font-teko text-3xl mr-4">Host:</h2>
-                        <div className="rounded-lg p-1" style={{backgroundColor: host.color}}>
-                            <p>{host.userName}</p>
-                        </div>
-                    </div>
-                    <div className="flex">
-                        <h2 className="font-teko text-3xl mr-4">Listeners:</h2>
-                         {users.map((user) => (
-                            <div className="rounded-lg p-1" style={{backgroundColor: user.color}}>
-                                {user.userName}
-                            </div>
-                        ))}
-                    </div>
+                    <HostInfo host={host}/>
+                    <Listeners users={users}/>
                 </div>
                 <div className="w-1/2 text-center">
-                    {currentPlayback.song ? 
-                    <div className="flex flex-col justify-center items-center">
-                        <img className="h-52" src={currentPlayback.image}/>
-                        <p>{currentPlayback.artist} - {currentPlayback.song}</p>
-                    </div>
-                    : <></>}
-                    <div className="grid-flow-col grid-cols-2 flex">
-                        <button
-                            className="w-1/4 h-24 my-4 mx-1 font-bold text-xl rounded bg-blue-500 hover:bg-blue-700 disabled:bg-blue-950"
-                        >
-                            Save
-                        </button>
-                        <button 
-                            className="w-3/4 h-24 my-4 mx-1 font-bold rounded bg-orange-500 text-xl hover:bg-orange-700 disabled:bg-orange-950"
-                            onClick={handleSkip}
-                            disabled={disableSkip}
-                        >
-                            Skip
-                        </button>
-                    </div>
+                    <Playback playback={currentPlayback}/>
+                    <RoomButtons
+                        skipCb={handleSkip}
+                        disableSkip={disableSkip}
+                    />
                 </div>
             </div>
-            <div className="fixed inset-x-0 bottom-0">
-                <PlayerWrapper
-                    spotifyApi={spotifyApi}
-                    spotifyToken={spotifyToken}
-                />
-            </div> 
+            {spotifyToken !== null ? 
+                <div className="fixed inset-x-0 bottom-0">
+                    <PlayerWrapper
+                        spotifyApi={spotifyApi}
+                        spotifyToken={spotifyToken}
+                    />
+                </div> 
+            : <></>}
         </div>
     );
 }

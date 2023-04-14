@@ -9,8 +9,10 @@
     - [x] Create basics
 - [ ] Room Page
     - [x] Fix spotify authentication issue
-    - [ ] Display playback
-    - [ ] Design host / listeners
+    - [x] Display playback
+    - [x] Design host / listeners
+    - [ ] Fix room leaving behavior
+    - [ ] Disable buttons until playback active
     - [ ] Skip rule text display
     - [ ] Socket emissions
 - [ ] Page Transitions
