@@ -166,7 +166,7 @@ io.on('connection', (socket) => {
 
     // Update User List with host
     const userInfo = {userName: data.userName, socketId: data.socketId};
-    createRoom(data.roomCode, userInfo)
+    createRoom(data.roomCode, userInfo, data.skipTarget)
 
     // Add socket to specific room
     console.log(`user ${socket.id} joining room ${data.roomCode}`)
@@ -195,7 +195,7 @@ io.on('connection', (socket) => {
       addToRoomMap(data.roomCode, userInfo);
 
       io.to(socket.id).emit('joinRoomSuccess', data.roomCode); // update single user they joined
-      socket.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users); // update all other users
+      socket.to(data.roomCode).emit('roomInfo', roomMap.get(data.roomCode)); // update all other users
     } else {
       io.to(socket.id).emit("joinRoomFailed", data.roomCode);
     }
@@ -268,16 +268,15 @@ function getRandomColor(colors) {
   return [color, colors];
 }
 
-function createRoom(roomCode, userInfo) {
+function createRoom(roomCode, userInfo, skipRule) {
 
   let [color, updatedColors] = getRandomColor(availableColors);
   availableColors = updatedColors;
 
   let info = userInfo;
   info.color = color;
-
-  console.log("color in create room", color);
-  console.log("info.color", info.color);
+  
+  console.log("skiprule", skipRule);
 
   //Assume there are no objects for this room at this point
   let roomInfo = {
@@ -285,7 +284,8 @@ function createRoom(roomCode, userInfo) {
     skipCount: 0,
     users: [],
     host: info,
-    skipRule: SkipRule.EVERYONE
+    skipRule: skipRule,
+    skipTarget: 1
   }
 
   roomMap.set(roomCode, roomInfo);
@@ -300,6 +300,7 @@ function addToRoomMap(key, value) {
   let roomObject = roomMap.get(key);
   if (roomObject) {
     usersArr = roomObject.users;
+    roomObject.skipTarget = calculateSkipTarget(usersArr.length+1, roomObject.skipRule);
   } 
   usersArr.push(value);
   roomMap.set(key, roomObject);
@@ -349,6 +350,20 @@ function isHost(roomCode, userId) {
   let host = roomMap.get(roomCode).host;
   return host.socketId === userId;
 }
+
+// Calculate our skip target
+function calculateSkipTarget(roomCount, skipRule) {
+  let target = 1;
+
+  if (skipRule === SkipRule.MAJORITY) {
+    target = (roomCount / 2) + 1; 
+  } else if (skipRule === SkipRule.EVERYONE) {
+    target = roomCount;
+  }
+
+  return target;
+}
+
 
 // Check if we should skip the song
 function shouldSkip(skipRule, skipCount, roomCount) {

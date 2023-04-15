@@ -51,7 +51,8 @@ const Create = ({ socket, spotifyApi }) => {
         e.preventDefault();
 
         const roomCode = generateRoomCode();
-        socket.emit('createRoom', {roomCode, userName, socketId: socket.id});
+        console.log("skiprule value", skipRule.value);
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
         navigate('/room', {state: {token: spotifyAccessToken, roomCode, host: { userName, socketId: socket.id}}});
     }
 

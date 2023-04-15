@@ -12,8 +12,8 @@
     - [x] Display playback
     - [x] Design host / listeners
     - [x] Fix room leaving behavior
-    - [ ] Disable buttons until playback active
     - [ ] Skip rule text display
+    - [ ] Disable buttons until playback active
     - [ ] Socket emissions
 - [ ] Page Transitions
 - [ ] Display Spotify playback on screen

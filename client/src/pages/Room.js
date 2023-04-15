@@ -26,6 +26,7 @@ const Room = ({ socket }) => {
     const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
+    const [skipTarget, setSkipTarget] = useState(1);
     const [host, setHost] = useState(state.host ? state.host : null);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
@@ -118,6 +119,7 @@ const Room = ({ socket }) => {
         setUsers(data.users);
         setHost(data.host);
         setRoomCode(data.roomCode);
+        setSkipTarget(data.skipTarget);
     }
 
     return (
@@ -137,6 +139,9 @@ const Room = ({ socket }) => {
                         skipCb={handleSkip}
                         disableSkip={disableSkip}
                     />
+                </div>
+                <div className="w-1/2 text-center">
+                    <p className="font-teko text-3xl">SKIP RULE: <span className="text-blue-600">&#123;</span> {skipTarget} <span className="text-blue-600">&#125;</span> room vote will skip the song</p>
                 </div>
             </div>
             {spotifyToken !== null ? 
