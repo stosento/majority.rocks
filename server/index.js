@@ -17,7 +17,7 @@ const frontendPort = 3000
 
 var generateRandomString = function(length) {
   var text = '';
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var possible = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
 
   for (var i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -201,6 +201,14 @@ io.on('connection', (socket) => {
     }
   })
 
+  // Leave room
+  socket.on('leaveRoom', (data) => {
+    removeFromRoomMap(socket, data.roomCode, data.socketId);
+    if (roomIsValid(data.roomCode)) {
+      io.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users);
+    }
+  })
+
   // Send userMap for a room
   socket.on('getRoomInfo', (roomCode) => {
     console.log("Emitting room info");
@@ -305,10 +313,7 @@ function removeFromRoomMap(socket, roomCode, userId) {
 
   // Check to see if room object is valid
   if (room) {
-    if (room.users && isLastUser(roomCode)) {
-      console.log("Deleting room", roomCode);
-      roomMap.delete(roomCode);
-    } else if (room.users && isHost(roomCode, userId)) {
+    if (isHost(roomCode, userId)) {
       console.log("Deleting room", roomCode);
       roomMap.delete(roomCode);
       io.to(roomCode).emit("hostLeft");
@@ -337,12 +342,6 @@ function roomIsValid(key) {
     console.log("Room was not found");
   }
   return roomExists;
-}
-
-// Check if user is last one in room
-function isLastUser(roomCode) {
-  let users = roomMap.get(roomCode).users;
-  return users.length === 1;
 }
 
 // Check if user is the host

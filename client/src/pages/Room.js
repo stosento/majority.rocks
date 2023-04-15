@@ -88,6 +88,11 @@ const Room = ({ socket }) => {
         }
     }
 
+    const handleLeave = () => {
+        socket.emit('leaveRoom', {roomCode: roomCode, socketId: socket.id});
+        navigate('/');
+    }
+
     const updatePlayback = (playback) => {
         const element = {
             artist: playback.artists[0].name,
@@ -117,7 +122,10 @@ const Room = ({ socket }) => {
 
     return (
         <div className="grid grid-cols-1 justify-items-center">
-            <RoomHeader code={roomCode}/>
+            <RoomHeader 
+                code={roomCode}
+                leaveCb={handleLeave}
+            />
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1">
                     <HostInfo host={host}/>

@@ -11,7 +11,7 @@
     - [x] Fix spotify authentication issue
     - [x] Display playback
     - [x] Design host / listeners
-    - [ ] Fix room leaving behavior
+    - [x] Fix room leaving behavior
     - [ ] Disable buttons until playback active
     - [ ] Skip rule text display
     - [ ] Socket emissions
