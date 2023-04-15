@@ -58,7 +58,9 @@ const Room = ({ socket }) => {
         socket.on('skipSong', (data) => {
             if (data.socketId === socket.id) {
                 console.log("TODO - SEND SKIP TO SPOTIFY");
-                //Skip next song
+                spotifyApi.skipToNext().then(() => {
+                    console.log("Skipping song");
+                })
             }
             setDisableSkip(false);
         });

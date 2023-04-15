@@ -141,12 +141,6 @@ app.get('/refresh_token', function(req, res) {
 
 // ----------------------------------------------------------------------------
 
-const SkipRule = Object.freeze({
-  SINGLE:   Symbol("single"),
-  MAJORITY:  Symbol("majority"),
-  EVERYONE: Symbol("everyone")
-});
-
 let roomMap = new Map();
 
 // SOCKET.IO BEHAVIOR
@@ -166,7 +160,7 @@ io.on('connection', (socket) => {
 
     // Update User List with host
     const userInfo = {userName: data.userName, socketId: data.socketId};
-    createRoom(data.roomCode, userInfo, data.skipTarget)
+    createRoom(data.roomCode, userInfo, data.skipRule)
 
     // Add socket to specific room
     console.log(`user ${socket.id} joining room ${data.roomCode}`)
@@ -205,7 +199,7 @@ io.on('connection', (socket) => {
   socket.on('leaveRoom', (data) => {
     removeFromRoomMap(socket, data.roomCode, data.socketId);
     if (roomIsValid(data.roomCode)) {
-      io.to(data.roomCode).emit('userListResponse', roomMap.get(data.roomCode).users);
+      io.to(data.roomCode).emit('roomInfo', roomMap.get(data.roomCode));
     }
   })
 
@@ -220,7 +214,7 @@ io.on('connection', (socket) => {
     let roomInfo = roomMap.get(roomCode);
     let updatedSkipCount = roomInfo.skipCount + 1;
     
-    if (shouldSkip(roomInfo.skipRule, updatedSkipCount, roomInfo.users.length)) {
+    if (shouldSkip(roomInfo.skipRule, updatedSkipCount, roomInfo.users.length+1)) {
       io.to(roomCode).emit("skipSong", roomInfo.host); // host - facilitate spotify skip
       updatedSkipCount = 0;
     }
@@ -275,7 +269,7 @@ function createRoom(roomCode, userInfo, skipRule) {
 
   let info = userInfo;
   info.color = color;
-  
+
   console.log("skiprule", skipRule);
 
   //Assume there are no objects for this room at this point
@@ -296,13 +290,10 @@ function addToRoomMap(key, value) {
 
   //TODO - Add reconnect functionality
 
-  let usersArr = []
   let roomObject = roomMap.get(key);
-  if (roomObject) {
-    usersArr = roomObject.users;
-    roomObject.skipTarget = calculateSkipTarget(usersArr.length+1, roomObject.skipRule);
-  } 
+  let usersArr = roomObject.users;
   usersArr.push(value);
+  roomObject.skipTarget = calculateSkipTarget(usersArr.length+1, roomObject.skipRule);
   roomMap.set(key, roomObject);
 }
 
@@ -326,8 +317,8 @@ function removeFromRoomMap(socket, roomCode, userId) {
       //Remove current user from room user list
       users = users.filter((user) => user.socketId !== userId);
       room.users = users;
+      room.skipTarget = calculateSkipTarget(users.length+1, room.skipRule);
       roomMap.set(roomCode, room);
-      socket.to(roomCode).emit('userListResponse', roomMap.get(roomCode).users);
     }
   }
 }
@@ -353,13 +344,17 @@ function isHost(roomCode, userId) {
 
 // Calculate our skip target
 function calculateSkipTarget(roomCount, skipRule) {
+  console.log("calculating skip target");
   let target = 1;
 
-  if (skipRule === SkipRule.MAJORITY) {
-    target = (roomCount / 2) + 1; 
-  } else if (skipRule === SkipRule.EVERYONE) {
+  if (skipRule === 'majority') {
+    console.log("roomCount", roomCount);
+    target = Math.floor(roomCount / 2) + 1; 
+  } else if (skipRule === 'everyone') {
     target = roomCount;
   }
+
+  console.log("target", target);
 
   return target;
 }
@@ -373,10 +368,10 @@ function shouldSkip(skipRule, skipCount, roomCount) {
   console.log("skipCount", skipCount);
   console.log("roomCount", roomCount);
 
-  if (skipRule === SkipRule.SINGLE) {
+  if (skipRule === 'single') {
     console.log("a");
     skip = true;
-  } else if (skipRule === SkipRule.EVERYONE) {
+  } else if (skipRule === 'majority') {
     console.log("b");
     skip = skipCount === roomCount;
   } else {

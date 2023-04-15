@@ -7,19 +7,14 @@ import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";
 import WideButton from "../components/WideButton";
-
-const SkipRule = Object.freeze({
-    SINGLE:   Symbol("single"),
-    MAJORITY:  Symbol("majority"),
-    EVERYONE: Symbol("everyone")
-  });
+import { SkipRule } from "../objects/enums";
 
 const Create = ({ socket, spotifyApi }) => {
 
     const options = [
-        {value: SkipRule.SINGLE.toString, label: "Single"},
-        {value: SkipRule.MAJORITY.toString, label: "Majority"},
-        {value: SkipRule.EVERYONE.toString, label: "Everyone"}
+        {value: SkipRule.SINGLE, label: "Single"},
+        {value: SkipRule.MAJORITY, label: "Majority"},
+        {value: SkipRule.EVERYONE, label: "Everyone"}
     ];
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
