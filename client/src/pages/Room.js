@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 
-
-import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
 import PlayerWrapper from "../components/PlayerWrapper";
@@ -23,7 +21,6 @@ const Room = ({ socket }) => {
     const state = location.state;
 
     const [spotifyToken, setSpotifyToken] = useState(state.token? state.token : null);
-    const [currentDevice, setCurrentDevice] = useState("");
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [skipTarget, setSkipTarget] = useState(1);

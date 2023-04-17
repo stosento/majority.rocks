@@ -1,12 +1,17 @@
 # majority.rocks
 
 ## Todo
+- [ ] Join Room
+  - [ ] No room exists
+- [ ] Alert functionality
+  - [ ] Room has been closed
+  - [ ] Song has been skipped
+- [ ] Display Spotify playback on screen for listeners
 - [ ] Room Page
     - [ ] Disable buttons until playback active
 - [ ] Page Transitions
-- [ ] Display Spotify playback on screen
 - [ ] Reconnect functionality
-- [ ] Add alert upon closing of a room
+- [ ] Save song functionality
 
 ## Tech Stack
 
