@@ -3,6 +3,8 @@ import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import WideButton from "../components/WideButton";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Join = ({ socket }) => {
 
@@ -10,13 +12,20 @@ const Join = ({ socket }) => {
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
     const [roomCode, setRoomCode] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
 
     useEffect(() => {
 
         socket.on("joinRoomFailed", (roomCode) => {
-            console.log("Unable to find room");
-            setErrorMsg(`Room ${roomCode} does not exist`);
+            toast.error(`Room ${roomCode} does not exist`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
         });
         socket.on("joinRoomSuccess", (roomCode) => {
             console.log("Joining room", roomCode);
@@ -31,6 +40,19 @@ const Join = ({ socket }) => {
     }
 
     return (
+        <>
+        <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        />
         <div className="w-full grid grid-cols-1 justify-items-center">
             <Header title="JOIN ROOM"/>
             <div className="w-2/3">
@@ -55,6 +77,7 @@ const Join = ({ socket }) => {
                 />
             </div>
         </div>
+        </>
     );
 }
 
