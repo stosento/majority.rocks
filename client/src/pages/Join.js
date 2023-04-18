@@ -25,7 +25,7 @@ const Join = ({ socket }) => {
                 draggable: true,
                 progress: undefined,
                 theme: "dark",
-                });
+            });
         });
         socket.on("joinRoomSuccess", (roomCode) => {
             console.log("Joining room", roomCode);

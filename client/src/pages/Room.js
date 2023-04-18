@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 
-import { useLocation } from "react-router-dom";
 import RoomHeader from "../components/RoomHeader";
 import PlayerWrapper from "../components/PlayerWrapper";
 import HostInfo from "../components/HostInfo";
@@ -10,14 +9,15 @@ import Listeners from "../components/Listeners";
 import Playback from "../components/Playback";
 import RoomButtons from "../components/RoomButtons";
 
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 const spotifyApi = new SpotifyWebApi();
 
 const Room = ({ socket }) => {
 
     const navigate = useNavigate();
     const location = useLocation();
-
-    console.log("location", location);
     const state = location.state;
 
     const [spotifyToken, setSpotifyToken] = useState(state.token? state.token : null);
@@ -50,14 +50,13 @@ const Room = ({ socket }) => {
             updateRoomInfo(data);
         });
         socket.on('hostLeft', () => {
-            navigate('/');
+            navigate('/', {state: {roomClosed: true} });
         });
         socket.on('skipSong', (data) => {
             if (data.socketId === socket.id) {
-                console.log("TODO - SEND SKIP TO SPOTIFY");
                 spotifyApi.skipToNext().then(() => {
                     console.log("Skipping song");
-                })
+                });
             }
             setDisableSkip(false);
         });
@@ -122,6 +121,19 @@ const Room = ({ socket }) => {
     }
 
     return (
+        <>
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
         <div className="grid grid-cols-1 justify-items-center">
             <RoomHeader 
                 code={roomCode}
@@ -152,6 +164,7 @@ const Room = ({ socket }) => {
                 </div> 
             : <></>}
         </div>
+        </>
     );
 }
 

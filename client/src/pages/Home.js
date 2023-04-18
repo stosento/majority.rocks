@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
 import RoomCode from "../components/RoomCode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const Home = ({ socket }) => {
+
+    const location = useLocation();
+    const state = location.state;
 
     const loginUrl = process.env.NODE_ENV !== 'production'
         ? 'http://localhost:8888/login'
@@ -11,9 +16,9 @@ const Home = ({ socket }) => {
     const navigate = useNavigate();
 
     const [showCode, setShowCode] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [inputCode, setInputCode] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
+    const [roomClosed, setRoomClosed] = useState(state !== null && state.roomClosed !== null 
+                                                ? state.roomClosed 
+                                                : false);
 
     const createRoom = (e) => {
         e.preventDefault();
@@ -25,8 +30,36 @@ const Home = ({ socket }) => {
         navigate('/join');
     }
 
+    useEffect(() => {
+        if (roomClosed) {
+            toast.error(`Room has been closed by host`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+            setRoomClosed(false);
+        }
+    }, []);
+
     return (
         <>
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
         <div className="w-full grid grid-cols-1 justify-items-center">
             <div className="jusity-items-center my-3 cursor-pointer" onClick={() => {navigate("/");}}>
                 <h1 className="text-center font-teko text-7xl">MAJORITY<span className="text-blue-600">.</span>ROCKS</h1>
