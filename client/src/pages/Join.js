@@ -3,7 +3,7 @@ import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import WideButton from "../components/WideButton";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 
