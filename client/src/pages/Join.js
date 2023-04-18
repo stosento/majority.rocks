@@ -5,6 +5,7 @@ import WideButton from "../components/WideButton";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Toast from "../components/Toast";
 
 const Join = ({ socket }) => {
 
@@ -41,18 +42,7 @@ const Join = ({ socket }) => {
 
     return (
         <>
-        <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        />
+        <Toast/>
         <div className="w-full grid grid-cols-1 justify-items-center">
             <Header title="JOIN ROOM"/>
             <div className="w-2/3">

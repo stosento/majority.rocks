@@ -3,6 +3,7 @@ import RoomCode from "../components/RoomCode";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Toast from "../components/Toast";
 
 const Home = ({ socket }) => {
 
@@ -48,18 +49,7 @@ const Home = ({ socket }) => {
 
     return (
         <>
-        <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-        />
+        <Toast/>
         <div className="w-full grid grid-cols-1 justify-items-center">
             <div className="jusity-items-center my-3 cursor-pointer" onClick={() => {navigate("/");}}>
                 <h1 className="text-center font-teko text-7xl">MAJORITY<span className="text-blue-600">.</span>ROCKS</h1>

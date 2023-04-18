@@ -11,6 +11,7 @@ import RoomButtons from "../components/RoomButtons";
 
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Toast from "../components/Toast";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -122,18 +123,7 @@ const Room = ({ socket }) => {
 
     return (
         <>
-        <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark"
-        />
+        <Toast/>
         <div className="grid grid-cols-1 justify-items-center">
             <RoomHeader 
                 code={roomCode}
