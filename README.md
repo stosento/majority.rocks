@@ -5,6 +5,8 @@
   - [x] Room has been closed
   - [x] Room doesn't exist
   - [x] Song has been skipped
+  - [ ] Upon listener room join
+  - [ ] Upon listener room leave
 - [ ] Room Page
     - [ ] Disable buttons until playback active
     - [ ] Display Spotify playback on screen for listeners
