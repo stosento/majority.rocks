@@ -56,6 +56,9 @@ const Room = ({ socket }) => {
         socket.on('skipSong', (data) => {
             if (data.socketId === socket.id) {
                 spotifyApi.skipToNext().then(() => {
+                    spotifyApi.getMyCurrentPlayingTrack().then((result) => {
+                        updatePlayback(result.item);
+                    });
                     console.log("Skipping song");
                 });
             }
