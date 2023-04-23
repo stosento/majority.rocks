@@ -372,14 +372,11 @@ function shouldSkip(skipRule, skipCount, roomCount) {
   console.log("roomCount", roomCount);
 
   if (skipRule === 'single') {
-    console.log("a");
     skip = true;
   } else if (skipRule === 'majority') {
-    console.log("b");
-    skip = skipCount === roomCount;
+    skip = (roomCount / skipCount) < 2;
   } else {
-    console.log("c");
-    skip = (roomCount / skipCount) > 2;
+    skip = skipCount === roomCount;
   }
 
   console.log("ShouldSkip", skip);
