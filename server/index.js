@@ -189,7 +189,7 @@ io.on('connection', (socket) => {
       addToRoomMap(data.roomCode, userInfo);
 
       io.to(socket.id).emit('joinRoomSuccess', data.roomCode); // update single user they joined
-      socket.to(data.roomCode).emit('roomInfo', roomMap.get(data.roomCode)); // update all other users
+      socket.to(data.roomCode).emit('userJoined', {name: data.userName, room: roomMap.get(data.roomCode)}); // update all other users
     } else {
       io.to(socket.id).emit("joinRoomFailed", data.roomCode);
     }
@@ -199,7 +199,8 @@ io.on('connection', (socket) => {
   socket.on('leaveRoom', (data) => {
     removeFromRoomMap(socket, data.roomCode, data.socketId);
     if (roomIsValid(data.roomCode)) {
-      io.to(data.roomCode).emit('roomInfo', roomMap.get(data.roomCode));
+      const name = getNameForSocketId(data.roomCode, data.socketId);
+      io.to(data.roomCode).emit('userLeft', {name: name, room : roomMap.get(data.roomCode)});
     }
   })
 
@@ -313,12 +314,14 @@ function removeFromRoomMap(socket, roomCode, userId) {
     } else {
       console.log("Removing user from Room Map", room);
       let users = room.users;
+      let name = getNameForSocketId(roomCode, userId);
 
       //Remove current user from room user list
       users = users.filter((user) => user.socketId !== userId);
       room.users = users;
       room.skipTarget = calculateSkipTarget(users.length+1, room.skipRule);
       roomMap.set(roomCode, room);
+      io.to(roomCode).emit('userLeft', {name: name, room : room});
     }
   }
 }
@@ -381,4 +384,12 @@ function shouldSkip(skipRule, skipCount, roomCount) {
 
   console.log("ShouldSkip", skip);
   return skip;
+}
+
+function getNameForSocketId(roomCode, socketId) {
+  const room = roomMap.get(roomCode);
+  const user = room.users.filter((u) => u.socketId == socketId);
+
+  console.log("user in helper method", user[0]);
+  return user[0].userName;
 }

@@ -50,6 +50,36 @@ const Room = ({ socket }) => {
             console.log("getRoomInfo received", data);
             updateRoomInfo(data);
         });
+        socket.on('userJoined', (data) => {
+            console.log("userJoined");
+            toast.info(`${data.name} joined the room!`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+            updateRoomInfo(data.room);
+        })
+        socket.on('userLeft', (data) => {
+            console.log("userLeft");
+            toast.info(`${data.name} left the room!`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+            });
+            updateRoomInfo(data.room);
+        })
+
+
         socket.on('hostLeft', () => {
             navigate('/', {state: {roomClosed: true} });
         });
@@ -59,7 +89,6 @@ const Room = ({ socket }) => {
                     spotifyApi.getMyCurrentPlayingTrack().then((result) => {
                         updatePlayback(result.item);
                     });
-                    console.log("Skipping song");
                 });
             }
             setDisableSkip(false);
@@ -143,7 +172,7 @@ const Room = ({ socket }) => {
                 leaveCb={handleLeave}
             />
             <div className="w-full grid grid-cols-1 justify-items-center">
-                <div className="w-1/2 grid-grid-cols-1">
+                <div className="w-1/2 grid-grid-cols-1 mb-3">
                     <HostInfo host={host}/>
                     <Listeners users={users}/>
                 </div>
