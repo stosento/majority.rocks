@@ -12,6 +12,7 @@ import RoomButtons from "../components/RoomButtons";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
+import SkipText from "../components/SkipText";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -84,11 +85,13 @@ const Room = ({ socket }) => {
             navigate('/', {state: {roomClosed: true} });
         });
         socket.on('skipSong', (data) => {
-            if (data.socketId === socket.id) {
-                spotifyApi.skipToNext().then(() => {
-                    spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-                        updatePlayback(result.item);
-                    });
+            if (data.host.socketId === socket.id) {
+                spotifyApi.skipToNext().then(async () => {
+                    setTimeout(() => {
+                        spotifyApi.getMyCurrentPlayingTrack().then((result) => {
+                            updatePlayback(result.item);                           
+                        });
+                    }, 500);
                 });
             }
             setDisableSkip(false);
@@ -110,9 +113,6 @@ const Room = ({ socket }) => {
         if (spotifyToken) {
             console.log("setting spotify")
             spotifyApi.setAccessToken(spotifyToken);
-            spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-                updatePlayback(result.item);
-            });
             spotifyApi.getMyCurrentPlaybackState().then((result) => {
                 console.log("currentplayback", result);
             });
@@ -141,8 +141,9 @@ const Room = ({ socket }) => {
             song: playback.name,
             image: playback.album.images[0].url
         }
+        console.log("element", element);
         setCurrentPlayback(element);
-        console.log(playback);
+        socket.emit('updatePlayback', {playback: element, roomCode: state.roomCode});
     }
 
     const updateUsers = (users) => {
@@ -161,6 +162,7 @@ const Room = ({ socket }) => {
         setHost(data.host);
         setRoomCode(data.roomCode);
         setSkipTarget(data.skipTarget);
+        setCurrentPlayback(data.playback);
     }
 
     return (
@@ -183,9 +185,7 @@ const Room = ({ socket }) => {
                         disableSkip={disableSkip}
                     />
                 </div>
-                <div className="w-1/2 text-center">
-                    <p className="font-teko text-3xl">SKIP RULE: <span className="text-blue-600">&#123;</span> {skipTarget} <span className="text-blue-600">&#125;</span> room vote will skip the song</p>
-                </div>
+                <SkipText count={skipTarget}/>
             </div>
             {spotifyToken !== null ? 
                 <div className="fixed inset-x-0 bottom-0">

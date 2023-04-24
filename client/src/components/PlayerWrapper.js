@@ -24,7 +24,6 @@ const PlayerWrapper = ({spotifyApi, spotifyToken}) => {
     }
 
     const handlePlayerChange = (state) => {
-        console.log("wtf is state", state);
         if (currentDevice !== "MajorityRocks") {
             const webPlayer = getWebPlayer(state);
             console.log("webPlayer", webPlayer);

@@ -216,11 +216,21 @@ io.on('connection', (socket) => {
     let updatedSkipCount = roomInfo.skipCount + 1;
     
     if (shouldSkip(roomInfo.skipRule, updatedSkipCount, roomInfo.users.length+1)) {
-      io.to(roomCode).emit("skipSong", roomInfo.host); // host - facilitate spotify skip
+      io.to(roomCode).emit("skipSong", {host: roomInfo.host, roomCode}); // host - facilitate spotify skip
       updatedSkipCount = 0;
     }
     roomInfo.skipCount = updatedSkipCount;
     roomMap.set(roomCode, roomInfo);
+  })
+
+  // Set playback
+  socket.on('updatePlayback', (data) => {
+    console.log("data", data);
+    let roomInfo = roomMap.get(data.roomCode);
+    roomInfo.playback.img = data.playback.image;
+    roomInfo.playback.text = `${data.playback.artist} - ${data.playback.song}`;
+    roomMap.set(data.roomCode, roomInfo);
+    io.to(data.roomCode).emit("roomInfo", roomMap.get(data.roomCode));
   })
 
   // Leaving rooms
@@ -259,11 +269,10 @@ function getRandomColor(colors) {
   const index = Math.floor(Math.random() * colors.length);
   const color = colors[index];
   colors.splice(index, 1);
-  console.log("color", color);
   return [color, colors];
 }
 
-function createRoom(roomCode, userInfo, skipRule) {
+function createRoom(roomCode, userInfo, skipRule, playback) {
 
   let [color, updatedColors] = getRandomColor(availableColors);
   availableColors = updatedColors;
@@ -280,7 +289,11 @@ function createRoom(roomCode, userInfo, skipRule) {
     users: [],
     host: info,
     skipRule: skipRule,
-    skipTarget: 1
+    skipTarget: 1,
+    playback: {
+      img: "",
+      text: ""
+    }
   }
 
   roomMap.set(roomCode, roomInfo);
