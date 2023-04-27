@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SpotifyPlayer from "react-spotify-web-playback";
 
-const PlayerWrapper = ({spotifyApi, spotifyToken}) => {
+const PlayerWrapper = ({spotifyApi, spotifyToken, updatePlayback}) => {
 
     const [loaded, setLoaded] = useState(false);
     const [currentDevice, setCurrentDevice] = useState("");
@@ -24,6 +24,16 @@ const PlayerWrapper = ({spotifyApi, spotifyToken}) => {
     }
 
     const handlePlayerChange = (state) => {
+        if (state.type === 'track_update') {
+            spotifyApi.skipToNext().then(async () => {
+                setTimeout(() => {
+                    spotifyApi.getMyCurrentPlayingTrack().then((result) => {
+                        updatePlayback(result.item);                           
+                    });
+                }, 500);
+            });
+        }
+
         if (currentDevice !== "MajorityRocks") {
             const webPlayer = getWebPlayer(state);
             console.log("webPlayer", webPlayer);

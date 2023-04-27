@@ -9,7 +9,7 @@ import Listeners from "../components/Listeners";
 import Playback from "../components/Playback";
 import RoomButtons from "../components/RoomButtons";
 
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 import SkipText from "../components/SkipText";
@@ -192,6 +192,7 @@ const Room = ({ socket }) => {
                     <PlayerWrapper
                         spotifyApi={spotifyApi}
                         spotifyToken={spotifyToken}
+                        updatePlayback={updatePlayback}
                     />
                 </div> 
             : <></>}
