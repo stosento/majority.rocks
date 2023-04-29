@@ -141,6 +141,7 @@ const Room = ({ socket }) => {
             song: playback.name,
             image: playback.album.images[0].url
         }
+        console.log("updating playback within Room");
         console.log("element", element);
         setCurrentPlayback(element);
         socket.emit('updatePlayback', {playback: element, roomCode: state.roomCode});

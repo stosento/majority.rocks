@@ -2,7 +2,7 @@ const Playback = ({ playback }) => {
 
     return (
         <>
-        {playback != null && playback.text != null ? 
+        {playback !== null && playback.text !== "" ? 
             <div className="flex flex-col justify-center items-center">
                 <img className="h-52" src={playback.img}/>
                 <p>{playback.text}</p>
