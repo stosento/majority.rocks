@@ -9,12 +9,6 @@ const PlayerWrapper = ({spotifyApi, spotifyToken, updatePlayback}) => {
     useEffect(() => {
         console.log("playerwrapper useEffect");
         setupPlayer();
-        // spotifyApi.getMyCurrentPlaybackState().then((result) => {
-        //     console.log("currentplayback in player", result);
-        // });
-        // spotifyApi.getMyDevices().then((result) => {
-        //     console.log("avaialbledevices in player", result);
-        // });
     }, [loaded])
 
     const setupPlayer = () => {
@@ -33,33 +27,16 @@ const PlayerWrapper = ({spotifyApi, spotifyToken, updatePlayback}) => {
 
     const handlePlayerChange = (state) => {
         console.log("player changed");
+
         if (state.type === 'track_update') {
             console.log("Player track change");
-            try {
-                console.log("In try block");
-                spotifyApi.skipToNext().then(async () => {
-                    console.log("within skip to next");
-                    setTimeout(() => {
-                        console.log("within timeout");
-                        spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-                            updatePlayback(result.item);                           
-                        });
-                    }, 500);
+            setTimeout(() => {
+                console.log("within timeout");
+                spotifyApi.getMyCurrentPlayingTrack().then((result) => {
+                    updatePlayback(result.item);                           
                 });
-            } catch (e) {
-                console.log("Error", e);
-            }
+            }, 500);
         }
-
-        // if (state.type === 'track_update') {
-        //     console.log("Player track change");
-        //     setTimeout(() => {
-        //         console.log("within timeout");
-        //         spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-        //             updatePlayback(result.item);                           
-        //         });
-        //     }, 500);
-        // }
 
         if (currentDevice !== "MajorityRocks" && state.status !== 'INITIALIZING') {
             console.log("webPlayer state", state);

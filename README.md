@@ -1,7 +1,6 @@
 # majority.rocks
 
 ## Todo
-- [ ] Upon ANY update, change playback state (next / prev, ex)
 - [ ] Room Page
     - [ ] Disable buttons until playback active
     - [x] Display Spotify playback on screen for listeners
