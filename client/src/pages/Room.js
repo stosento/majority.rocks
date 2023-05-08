@@ -30,6 +30,7 @@ const Room = ({ socket }) => {
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
+    const [disableRoomButtons, setDisableRoomButtons] = useState(true);
 
     useEffect(() => {
         console.log("in room useeffect");
@@ -113,17 +114,10 @@ const Room = ({ socket }) => {
         if (spotifyToken) {
             console.log("setting spotify")
             spotifyApi.setAccessToken(spotifyToken);
-            spotifyApi.getMyCurrentPlaybackState().then((result) => {
-                console.log("currentplayback", result);
-            });
-            spotifyApi.getMyDevices().then((result) => {
-                console.log("avaialbledevices", result);
-            });
         }
     }
 
     const setupRoom = () => {
-        console.log("In the setupRoom", state);
         if (state.code) {
             console.log("getting room info in setup room");
             socket.emit('getRoomInfo', state.code);
@@ -182,6 +176,7 @@ const Room = ({ socket }) => {
                 <div className="w-1/2 text-center">
                     <Playback playback={currentPlayback}/>
                     <RoomButtons
+                        disableButtons={disableRoomButtons}
                         skipCb={handleSkip}
                         disableSkip={disableSkip}
                     />
