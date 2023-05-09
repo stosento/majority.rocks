@@ -197,9 +197,9 @@ io.on('connection', (socket) => {
 
   // Leave room
   socket.on('leaveRoom', (data) => {
+    const name = getNameForSocketId(data.roomCode, data.socketId);
     removeFromRoomMap(socket, data.roomCode, data.socketId);
     if (roomIsValid(data.roomCode)) {
-      const name = getNameForSocketId(data.roomCode, data.socketId);
       io.to(data.roomCode).emit('userLeft', {name: name, room : roomMap.get(data.roomCode)});
     }
   })
