@@ -30,7 +30,6 @@ const Room = ({ socket }) => {
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
-    const [disableRoomButtons, setDisableRoomButtons] = useState(true);
 
     useEffect(() => {
         console.log("in room useeffect");
@@ -137,7 +136,6 @@ const Room = ({ socket }) => {
         }
         console.log("updating playback within Room", element);
         setCurrentPlayback(element);
-        setDisableRoomButtons(false);
         socket.emit('updatePlayback', {playback: element, roomCode: state.roomCode});
     }
 
@@ -176,7 +174,6 @@ const Room = ({ socket }) => {
                 <div className="w-1/2 text-center">
                     <Playback playback={currentPlayback}/>
                     <RoomButtons
-                        disableButtons={disableRoomButtons}
                         skipCb={handleSkip}
                         disableSkip={disableSkip}
                     />
@@ -186,6 +183,7 @@ const Room = ({ socket }) => {
             {spotifyToken !== null ? 
                 <div className="fixed inset-x-0 bottom-0">
                     <PlayerWrapper
+                        playback={currentPlayback}
                         spotifyApi={spotifyApi}
                         spotifyToken={spotifyToken}
                         updatePlayback={updatePlayback}
