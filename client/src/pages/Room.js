@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 import SkipText from "../components/SkipText";
+import SettingsButton from "../components/SettingsButton";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -179,6 +180,10 @@ const Room = ({ socket }) => {
                     />
                 </div>
                 <SkipText count={skipTarget}/>
+                <SettingsButton
+                    currentId={socket.id}
+                    hostId={host ? host.socketId : null}
+                />
             </div>
             {spotifyToken !== null ? 
                 <div className="fixed inset-x-0 bottom-0">
