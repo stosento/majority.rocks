@@ -5,6 +5,12 @@
 @import url(https://fonts.googleapis.com/css2?family=Teko&display=swap); 
 @import url(https://fonts.googleapis.com/css2?family=Alkatra&display=swap);
 
+@layer base {
+  html {
+    @apply text-white;
+  }
+}
+
 html {
   height: 100%;
 }

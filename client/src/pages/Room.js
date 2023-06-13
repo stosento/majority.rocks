@@ -7,13 +7,13 @@ import PlayerWrapper from "../components/PlayerWrapper";
 import HostInfo from "../components/HostInfo";
 import Listeners from "../components/Listeners";
 import Playback from "../components/Playback";
-import RoomButtons from "../components/RoomButtons";
+import RoomButtons from "../components/buttons/RoomButtons";
 
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 import SkipText from "../components/SkipText";
-import SettingsButton from "../components/SettingsButton";
+import SettingsButton from "../components/buttons/SettingsButton";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -27,6 +27,7 @@ const Room = ({ socket }) => {
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [skipTarget, setSkipTarget] = useState(1);
+    const [skipRule, setSkipRule] = useState({});
     const [host, setHost] = useState(state.host ? state.host : null);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
@@ -145,6 +146,10 @@ const Room = ({ socket }) => {
         setUsers(users);
     }
 
+    const updateSettings = (skipRule) => {
+        socket.emit("skipRuleUpdated", skipRule);
+    }
+
     const handleSkip = () => {
         socket.emit("pressSkip", roomCode);
         setDisableSkip(true);
@@ -183,6 +188,8 @@ const Room = ({ socket }) => {
                 <SettingsButton
                     currentId={socket.id}
                     hostId={host ? host.socketId : null}
+                    currentRule={skipRule}
+                    updateSettings={updateSettings}
                 />
             </div>
             {spotifyToken !== null ? 

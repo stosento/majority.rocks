@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
-import WideButton from "../components/WideButton";
+import WideButton from "../components/buttons/WideButton";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';

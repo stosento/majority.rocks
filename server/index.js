@@ -401,5 +401,5 @@ function getNameForSocketId(roomCode, socketId) {
   const user = room.users.filter((u) => u.socketId == socketId);
 
   console.log("user in helper method", user[0]);
-  return user[0].userName;
+  return user[0] ? user[0].userName : null;
 }

@@ -6,7 +6,7 @@ import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";
-import WideButton from "../components/WideButton";
+import WideButton from "../components/buttons/WideButton";
 import { SkipRule } from "../objects/enums";
 
 const Create = ({ socket, spotifyApi }) => {
