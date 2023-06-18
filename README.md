@@ -1,6 +1,7 @@
 # majority.rocks
 
 ## Todo
+- [ ] Go live
 - [ ] Settings change for host
 - [ ] Add QR code share functionality
 - [ ] Update modal from home screen
