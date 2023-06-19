@@ -253,7 +253,7 @@ io.on('connection', (socket) => {
 
 // This was throwing an ENOENT error, so commenting out for now
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, './client/build', 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'build', 'index.html'));
 });
 
 // Set Server to HTTP
