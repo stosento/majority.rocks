@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import QRButton from "./buttons/QRButton";
 
 const RoomHeader = ({ code, leaveCb }) => {
 
@@ -15,6 +16,10 @@ const RoomHeader = ({ code, leaveCb }) => {
             </div>
             <div className="self-center">
                 <h1 className="text-center font-teko text-7xl">ROOM {left}{codeElement}{right} </h1>
+            </div>
+            <div className=" pl-3 columns-1 flex-col items-stretch">
+                <button className="w-full my-1 font-bold text-m rounded bg-blue-500 hover:bg-blue-700 disabled:bg-blue-950">Copy</button>
+                <QRButton roomId={code}/>
             </div>
         </div>
     );

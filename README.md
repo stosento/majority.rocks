@@ -1,9 +1,10 @@
 # majority.rocks
 
 ## Todo
+- [ ] Add QR code share functionality
+- [ ] Add button for copy
 - [ ] Go live
 - [ ] Settings change for host
-- [ ] Add QR code share functionality
 - [ ] Update modal from home screen
 - [ ] Change Spotify login to be separate from Create Room
 - [ ] Save song functionality
