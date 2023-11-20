@@ -1,8 +1,8 @@
 # majority.rocks
 
 ## Todo
-- [ ] Add QR code share functionality
-- [ ] Add button for copy
+- [x] Add QR code share functionality
+- [x] Add button for copy
 - [ ] Go live
 - [ ] Settings change for host
 - [ ] Update modal from home screen
