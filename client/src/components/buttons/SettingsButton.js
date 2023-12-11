@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SettingsModal from "../modals/SettingsModal";
 
-const SettingsButton = ({ currentId, hostId }) => {
+const SettingsButton = ({ currentId, hostId, updateSettings, skipRule }) => {
 
     const [showModal, setShowModal] = useState(false);
     const handleShowModal = () => setShowModal(true);
@@ -13,7 +13,12 @@ const SettingsButton = ({ currentId, hostId }) => {
                 Settings
             </button>
         : <></>}
-            <SettingsModal show={showModal} setShow={setShowModal}/>
+            <SettingsModal 
+                show={showModal} 
+                setShow={setShowModal}
+                updateSettings={updateSettings}
+                skipRule={skipRule}
+            />
         </>
     );
 }

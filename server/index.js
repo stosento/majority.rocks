@@ -223,6 +223,16 @@ io.on('connection', (socket) => {
     roomMap.set(roomCode, roomInfo);
   })
 
+  // Updating Skip Rule
+  socket.on('updateSkipRule', (data) => {
+    let roomInfo = roomMap.get(data.roomCode);
+    roomInfo.skipRule = data.rule;
+    roomInfo.skipTarget = calculateSkipTarget(roomInfo.users.length+1, data.rule);
+    console.log('roomInfo POST SETTINGS: ', roomInfo);
+    roomMap.set(data.roomCode, roomInfo);
+    io.to(data.roomCode).emit("updatedSettings", roomMap.get(data.roomCode));
+  })
+
   // Set playback
   socket.on('updatePlayback', (data) => {
     console.log("data", data);

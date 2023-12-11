@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 import SkipText from "../components/SkipText";
 import SettingsButton from "../components/buttons/SettingsButton";
+import { generateToastMessage } from "../utils/utils";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -27,17 +28,15 @@ const Room = ({ socket }) => {
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [skipTarget, setSkipTarget] = useState(1);
-    const [skipRule, setSkipRule] = useState({});
+    const [skipRule, setSkipRule] = useState(state.skipRule ? state.skipRule : null);
     const [host, setHost] = useState(state.host ? state.host : null);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
 
     useEffect(() => {
-        console.log("in room useeffect");
 
         if (!roomLoaded) {
-            console.log("Room isn't loaded");
             if (spotifyToken) {
                 setupSpotify();
             }
@@ -46,42 +45,23 @@ const Room = ({ socket }) => {
         }
 
         socket.on('userListResponse', (data) => {
-            console.log("userListResponse received", data);
             updateUsers(data);
         });
         socket.on('roomInfo', (data) => {
-            console.log("getRoomInfo received", data);
             updateRoomInfo(data);
         });
         socket.on('userJoined', (data) => {
-            console.log("userJoined");
-            toast.info(`${data.name} joined the room!`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
             updateRoomInfo(data.room);
+            generateToastMessage(`${data.name} joined the room!`);
         })
         socket.on('userLeft', (data) => {
-            console.log("userLeft");
-            toast.info(`${data.name} left the room!`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
             updateRoomInfo(data.room);
+            generateToastMessage(`${data.name} left the room!`);
         })
-
+        socket.on('updatedSettings', (data) => {
+            setSkipTarget(data.skipTarget);
+            generateToastMessage('Settings have been updated!');
+        })
 
         socket.on('hostLeft', () => {
             navigate('/', {state: {roomClosed: true} });
@@ -97,30 +77,19 @@ const Room = ({ socket }) => {
                 });
             }
             setDisableSkip(false);
-            toast.info(`Song has been skipped`, {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+            generateToastMessage('Song has been skipped');
         });
 
     }, []);
 
     const setupSpotify = () => { // We are host, so room needs to be built
         if (spotifyToken) {
-            console.log("setting spotify")
             spotifyApi.setAccessToken(spotifyToken);
         }
     }
 
     const setupRoom = () => {
         if (state.code) {
-            console.log("getting room info in setup room");
             socket.emit('getRoomInfo', state.code);
         }
     }
@@ -136,18 +105,16 @@ const Room = ({ socket }) => {
             song: playback.name,
             image: playback.album.images[0].url
         }
-        console.log("updating playback within Room", element);
         setCurrentPlayback(element);
         socket.emit('updatePlayback', {playback: element, roomCode: state.roomCode});
     }
 
     const updateUsers = (users) => {
-        console.log("Updating my users", users);
         setUsers(users);
     }
 
     const updateSettings = (skipRule) => {
-        socket.emit("skipRuleUpdated", skipRule);
+        socket.emit("updateSkipRule", {rule: skipRule, roomCode: roomCode});
     }
 
     const handleSkip = () => {
@@ -156,7 +123,6 @@ const Room = ({ socket }) => {
     }
 
     const updateRoomInfo = (data) => {
-        console.log("update room info", data);
         setUsers(data.users);
         setHost(data.host);
         setRoomCode(data.roomCode);
@@ -188,8 +154,8 @@ const Room = ({ socket }) => {
                 <SettingsButton
                     currentId={socket.id}
                     hostId={host ? host.socketId : null}
-                    currentRule={skipRule}
                     updateSettings={updateSettings}
+                    skipRule={skipRule}
                 />
             </div>
             {spotifyToken !== null ? 

@@ -3,37 +3,46 @@ import { Modal } from "react-bootstrap";
 import { SkipRule } from '../../objects/enums';
 import Dropdown from '../Dropdown';
 
-const SettingsModal = (props) => {
+const SettingsModal = ({show, setShow, updateSettings, skipRule}) => {
 
     const options = [
         {value: SkipRule.SINGLE, label: "Single"},
         {value: SkipRule.MAJORITY, label: "Majority"},
         {value: SkipRule.EVERYONE, label: "Everyone"}
     ];
-    const [skipRule, setSkipRule] = useState(props.skipRule);
+    const [rule, setRule] = useState(skipRule);
 
-    const handleClose = () => props.setShow(false);
+    const handleClose = () => {
+        console.log("Blah");
+        setShow(false);
+    }
+    
+    const saveSettings = () => {
+        console.log("In save settings of the settings modal");
+        updateSettings(rule.value);
+        setShow(false);
+    }
 
     return (
         <>
-          <Modal className='text-gray-700' show={props.show} onHide={handleClose}>
-            <Modal.Header closeButton>
+          <Modal className='text-gray-700' show={show} onHide={handleClose}>
+            <Modal.Header className="bg-gray-800 text-white" closeButton>
               <Modal.Title>Room Settings</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className='bg-gray-800 text-white'>
                 <Dropdown
                     id="skipRule"
                     label="Skip Rule"
                     placeholder="SELECT..."
                     options={options}
-                    value={skipRule}
-                    cb={setSkipRule}
+                    value={rule}
+                    cb={setRule}
                 />
             </Modal.Body>
-            <Modal.Footer>
+            <Modal.Footer className="bg-gray-800">
                 <button
                     className="text-white rounded bg-green-700 h-10 w-1/4"
-                    onClick={props.updateSettings}
+                    onClick={saveSettings}
                 >
                     Save Changes
                 </button>

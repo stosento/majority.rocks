@@ -7,8 +7,8 @@ const QRModal = (props) => {
 
     return (
         <>
-          <Modal className='text-white' show={props.show} onHide={handleClose} size='sm'>
-            <Modal.Header className="bg-gray-800" closeButton>
+          <Modal className='text-gray-700' show={props.show} onHide={handleClose} size='sm'>
+            <Modal.Header className="bg-gray-800 text-white" closeButton>
               <Modal.Title className="flex">Scan to join</Modal.Title>
             </Modal.Header>
             <Modal.Body className='flex justify-center bg-gray-800'>
