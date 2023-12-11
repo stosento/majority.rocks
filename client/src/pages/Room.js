@@ -33,6 +33,7 @@ const Room = ({ socket }) => {
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
+    const [savedSongs, setSavedSongs] = useState([]);
 
     useEffect(() => {
 
@@ -122,6 +123,15 @@ const Room = ({ socket }) => {
         setDisableSkip(true);
     }
 
+    const handleSave = () => {
+        const song = currentPlayback.text
+        savedSongs[song] = 'added';
+        setSavedSongs(savedSongs);
+        console.log(savedSongs);
+        console.log("Count of saved songs: ", savedSongs.length)
+        generateToastMessage('Song has been saved');
+    }
+
     const updateRoomInfo = (data) => {
         setUsers(data.users);
         setHost(data.host);
@@ -147,6 +157,7 @@ const Room = ({ socket }) => {
                     <Playback playback={currentPlayback}/>
                     <RoomButtons
                         skipCb={handleSkip}
+                        saveCb={handleSave}
                         disableSkip={disableSkip}
                     />
                 </div>
@@ -156,7 +167,14 @@ const Room = ({ socket }) => {
                     hostId={host ? host.socketId : null}
                     updateSettings={updateSettings}
                     skipRule={skipRule}
-                />
+                /> 
+                <h3>TEST</h3>
+                <ul>
+                    {savedSongs.map(item => {
+                        console.log("item: ", item)
+                        return <li>{item}</li>
+                    })}
+                </ul>
             </div>
             {spotifyToken !== null ? 
                 <div className="fixed inset-x-0 bottom-0">
