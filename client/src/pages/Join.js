@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import WideButton from "../components/buttons/WideButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
@@ -10,9 +10,12 @@ import Toast from "../components/Toast";
 const Join = ({ socket }) => {
 
     const navigate = useNavigate();
+    const { roomId } = useParams();
+
+    console.log('roomID: ', roomId);
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
-    const [roomCode, setRoomCode] = useState("");
+    const [roomCode, setRoomCode] = useState(roomId ? roomId : "");
 
     useEffect(() => {
 

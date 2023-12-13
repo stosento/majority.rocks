@@ -5,6 +5,8 @@ const QRModal = (props) => {
 
     const handleClose = () => props.setShow(false);
 
+    console.log("Window location origin: ", window.location.origin);
+
     return (
         <>
           <Modal className='text-gray-700' show={props.show} onHide={handleClose} size='sm'>
@@ -12,7 +14,7 @@ const QRModal = (props) => {
               <Modal.Title className="flex">Scan to join</Modal.Title>
             </Modal.Header>
             <Modal.Body className='flex justify-center bg-gray-800'>
-                <QRCode value={ window.location.href + '/' + props.roomId.toLowerCase()}/>
+                <QRCode value={ window.location.origin + '/join/' + props.roomId.toLowerCase()}/>
             </Modal.Body>
             <Modal.Footer className='bg-gray-800'>
                 <button

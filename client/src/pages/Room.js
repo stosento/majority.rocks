@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import SpotifyWebApi from "spotify-web-api-js";
 
 import RoomHeader from "../components/RoomHeader";
@@ -9,12 +9,12 @@ import Listeners from "../components/Listeners";
 import Playback from "../components/Playback";
 import RoomButtons from "../components/buttons/RoomButtons";
 
-import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Toast from "../components/Toast";
 import SkipText from "../components/SkipText";
 import SettingsButton from "../components/buttons/SettingsButton";
 import { generateToastMessage } from "../utils/utils";
+import SavedButton from "../components/buttons/SavedButton";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -33,7 +33,7 @@ const Room = ({ socket }) => {
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
     const [currentPlayback, setCurrentPlayback] = useState({});
-    const [savedSongs, setSavedSongs] = useState([]);
+    const [savedSongs, setSavedSongs] = useState({});
 
     useEffect(() => {
 
@@ -125,7 +125,7 @@ const Room = ({ socket }) => {
 
     const handleSave = () => {
         const song = currentPlayback.text
-        savedSongs[song] = 'added';
+        savedSongs[song] = '';
         setSavedSongs(savedSongs);
         console.log(savedSongs);
         console.log("Count of saved songs: ", savedSongs.length)
@@ -167,14 +167,10 @@ const Room = ({ socket }) => {
                     hostId={host ? host.socketId : null}
                     updateSettings={updateSettings}
                     skipRule={skipRule}
-                /> 
-                <h3>TEST</h3>
-                <ul>
-                    {savedSongs.map(item => {
-                        console.log("item: ", item)
-                        return <li>{item}</li>
-                    })}
-                </ul>
+                />
+                <SavedButton
+                    savedSongs={savedSongs}
+                />
             </div>
             {spotifyToken !== null ? 
                 <div className="fixed inset-x-0 bottom-0">

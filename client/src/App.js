@@ -25,8 +25,8 @@ function App() {
           <Route index element={<Home socket={socket}/>}/>
           <Route path="create" element={<Create socket={socket} spotifyApi={spotifyApi}/>}/>
           <Route path="join" element={<Join socket={socket}/>}/>
+          <Route path="join/:roomId" element={<Join socket={socket}/>}/>
           <Route path="room" element={<Room socket={socket}/>}/>
-          <Route path="room/:roomId" element={<Room socket={socket}/>}/>
           <Route path="*" element={<NoPage />}/>
         {/* </Route> */}
       </Routes>
