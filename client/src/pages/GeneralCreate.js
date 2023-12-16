@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
-import { generateRoomCode } from "../utils/utils";
+import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";
 import WideButton from "../components/buttons/WideButton";
 import { SkipRule } from "../objects/enums";
 
-const CreateGeneral = ({ socket }) => {
+const GeneralCreate = ({ socket, spotifyApi }) => {
+
+    const navigate = useNavigate();
 
     const options = [
         {value: SkipRule.SINGLE, label: "Single"},
@@ -18,16 +20,15 @@ const CreateGeneral = ({ socket }) => {
     ];
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+    const [prompt, setPrompt] = useState("");
     const [skipRule, setSkipRule] = useState(options[1]);
-
-    const navigate = useNavigate();
 
     const createRoom = (e) => {
         e.preventDefault();
 
         const roomCode = generateRoomCode();
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
-        navigate('/room', {state: {roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
+        navigate('/generalRoom', {state: {prompt, roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
     }
 
     return (
@@ -40,7 +41,14 @@ const CreateGeneral = ({ socket }) => {
                     placeholder="Name..."
                     value={userName}
                     cb={setUserName}
-                    />
+                />
+                <TextBar 
+                    id="prompt"
+                    label="Enter your room prompt"
+                    placeholder="Prompt..."
+                    value={prompt}
+                    cb={setPrompt}
+                />
                 <Dropdown
                     id="skipRule"
                     label="Choose your skip rule"
@@ -58,4 +66,4 @@ const CreateGeneral = ({ socket }) => {
     );
 }
 
-export default CreateGeneral;
+export default GeneralCreate;
