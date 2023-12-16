@@ -26,6 +26,11 @@ const Home = ({ socket }) => {
         window.location.replace(loginUrl);
     }
 
+    const createGeneralRoom = (e) => {
+        e.preventDefault();
+        navigate('/general');
+    }
+
     const joinRoom = (e) => {
         e.preventDefault();
         navigate('/join');
@@ -60,25 +65,32 @@ const Home = ({ socket }) => {
                 </p>
             </div>
             <div className="border-b-2 border-gray-500 w-5/12 mb-5"></div>
-            <div className="w-1/2">            
-                <div className="grid grid-cols-2">
-                    <div className="grid grid-cols-1">
+            <div className="w-1/2">
+                <div class="grid grid-rows-2 grid-flow-col">
+                    <div class="h-24 row-span-1 col-span-2 mr-4 my-2">
                         <button 
-                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
-                            onClick={createRoom}
+                            className="h-full w-full font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                            onClick={createGeneralRoom}
                         >
-                            Create Room
+                            Create General Room
                         </button>
                     </div>
-                    <div className="grid grid-cols-1">
+                    <div class="h-24 row-span-1 col-span-2 mr-4 my-2">
                         <button 
-                            className="h-24 m-4 px-4 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl" 
+                            className="h-full w-full font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                            onClick={createRoom}
+                        >
+                            Create Music Room
+                        </button>
+                    </div>
+                    <div class="row-span-3 ml-4 my-2">
+                        <button 
+                            className="h-full w-full font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl" 
                             onClick={joinRoom}>
                             Join Room
                         </button>
                     </div>
-                </div>
-
+                </div> 
                 <div className="grid grid-rows-1">
                     <button className="h-10 m-4 px-4 font-bold rounded bg-gray-500 hover:bg-gray-600 active:bg-gray-700 text-lg text-gray-200" onClick={() => setShowCode(!showCode)}>
                         How it works

@@ -11,6 +11,7 @@ import { initiateSocketConnection } from "./socketio.service";
 import SpotifyWebApi from "spotify-web-api-js";
 import Create from "./pages/Create";
 import Join from "./pages/Join";
+import CreateGeneral from "./pages/CreateGeneral";
 
 // const socket = initiateSocketConnection();
 const socket = io.connect('http://localhost:8888')
@@ -24,6 +25,7 @@ function App() {
         {/* <Route path="/" element={<Layout />}> */}
           <Route index element={<Home socket={socket}/>}/>
           <Route path="create" element={<Create socket={socket} spotifyApi={spotifyApi}/>}/>
+          <Route path="general" element={<CreateGeneral socket={socket}/>}/>
           <Route path="join" element={<Join socket={socket}/>}/>
           <Route path="join/:roomId" element={<Join socket={socket}/>}/>
           <Route path="room" element={<Room socket={socket}/>}/>
