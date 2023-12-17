@@ -50,6 +50,14 @@ const Create = ({ socket, spotifyApi }) => {
         navigate('/room', {state: {token: spotifyAccessToken, roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
     }
 
+    const createGeneralRoom = (e) => {
+        e.preventDefault();
+
+        const roomCode = generateRoomCode();
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
+        navigate('/generalRoom', {state: {roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
+    }
+
     return (
         <div className="w-full grid grid-cols-1 justify-items-center">
             <Header title="CREATE ROOM"/>
@@ -69,10 +77,24 @@ const Create = ({ socket, spotifyApi }) => {
                     value={skipRule}
                     cb={setSkipRule}
                 />
-                <WideButton
-                    text="Create"
-                    onClick={createRoom}
-                />
+                <div className="grid grid-cols-2 pt-10">
+                    <div className="grid grid-cols-1">
+                        <button
+                            className="h-24 m-2 px-2 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                            onClick={createGeneralRoom}
+                        >
+                            General
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-1">
+                        <button
+                            className="h-24 m-2 px-2 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                            onClick={createRoom}
+                        >
+                            Music
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
