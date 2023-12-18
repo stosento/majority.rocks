@@ -12,6 +12,7 @@ import Toast from "../components/Toast";
 import { generateToastMessage } from "../utils/utils";
 import 'react-toastify/dist/ReactToastify.css';
 import PromptText from "../components/PromptText";
+import PromptModal from "../components/modals/PromptModal";
 
 const GeneralRoom = ({ socket }) => {
 
@@ -22,6 +23,8 @@ const GeneralRoom = ({ socket }) => {
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [prompt, setPrompt] = useState(state.prompt ? state.prompt : null);
+    const [showPromptModal, setShowPromptModal] = useState(true);
+    const [promptModalAnimations, setPromptModalAnimations] = useState(false);
     const [skipTarget, setSkipTarget] = useState(1);
     const [skipRule, setSkipRule] = useState(state.skipRule ? state.skipRule : null);
     const [host, setHost] = useState(state.host ? state.host : null);
@@ -98,9 +101,24 @@ const GeneralRoom = ({ socket }) => {
         setSkipTarget(data.skipTarget);
     }
 
+    const handlePromptUpdate = (text) => {
+        console.log('Handle prompt method');
+        setPrompt(text);
+    }
+
     return (
         <>
         <Toast/>
+        {showPromptModal ? 
+            <PromptModal
+                show={showPromptModal} 
+                setShow={setShowPromptModal}
+                animations={promptModalAnimations}
+                setAnimations={setPromptModalAnimations}
+                prompt={prompt}
+                handlePrompt={handlePromptUpdate}
+            /> : <></>
+        }
         <div className="grid grid-cols-1 justify-items-center">
             <RoomHeader 
                 code={roomCode}

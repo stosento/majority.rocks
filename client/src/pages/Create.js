@@ -68,7 +68,7 @@ const Create = ({ socket, spotifyApi }) => {
                     placeholder="Name..."
                     value={userName}
                     cb={setUserName}
-                    />
+                />
                 <Dropdown
                     id="skipRule"
                     label="Choose your skip rule"
