@@ -15,6 +15,7 @@ import SkipText from "../components/SkipText";
 import SettingsButton from "../components/buttons/SettingsButton";
 import { generateToastMessage } from "../utils/utils";
 import SavedButton from "../components/buttons/SavedButton";
+import LeaveModal from "../components/modals/LeaveModal";
 
 const spotifyApi = new SpotifyWebApi();
 
@@ -29,6 +30,7 @@ const Room = ({ socket }) => {
     const [users, setUsers] = useState([]);
     const [skipTarget, setSkipTarget] = useState(1);
     const [skipRule, setSkipRule] = useState(state.skipRule ? state.skipRule : null);
+    const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [host, setHost] = useState(state.host ? state.host : null);
     const [roomCode, setRoomCode] = useState("");
     const [disableSkip, setDisableSkip] = useState(false);
@@ -95,6 +97,10 @@ const Room = ({ socket }) => {
         }
     }
 
+    const leaveModal = () => {
+        setShowLeaveModal(true);
+    }
+
     const handleLeave = () => {
         socket.emit('leaveRoom', {roomCode: roomCode, socketId: socket.id});
         navigate('/');
@@ -143,10 +149,16 @@ const Room = ({ socket }) => {
     return (
         <>
         <Toast/>
+        {leaveModal ? 
+            <LeaveModal
+                show={showLeaveModal} 
+                setShow={setShowLeaveModal}
+                leaveCb={handleLeave}
+            /> : <></>}
         <div className="grid grid-cols-1 justify-items-center">
             <RoomHeader 
                 code={roomCode}
-                leaveCb={handleLeave}
+                leaveCb={leaveModal}
             />
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1 mb-3">

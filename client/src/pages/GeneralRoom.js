@@ -13,6 +13,7 @@ import { generateToastMessage } from "../utils/utils";
 import 'react-toastify/dist/ReactToastify.css';
 import PromptText from "../components/PromptText";
 import PromptModal from "../components/modals/PromptModal";
+import LeaveModal from "../components/modals/LeaveModal";
 
 const GeneralRoom = ({ socket }) => {
 
@@ -24,6 +25,7 @@ const GeneralRoom = ({ socket }) => {
     const [users, setUsers] = useState([]);
     const [prompt, setPrompt] = useState(state.prompt ? state.prompt : null);
     const [showPromptModal, setShowPromptModal] = useState(true);
+    const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [promptModalAnimations, setPromptModalAnimations] = useState(false);
     const [skipTarget, setSkipTarget] = useState(1);
     const [skipRule, setSkipRule] = useState(state.skipRule ? state.skipRule : null);
@@ -76,6 +78,10 @@ const GeneralRoom = ({ socket }) => {
         }
     }
 
+    const leaveModal = () => {
+        setShowLeaveModal(true);
+    }
+
     const handleLeave = () => {
         socket.emit('leaveRoom', {roomCode: roomCode, socketId: socket.id});
         navigate('/');
@@ -109,6 +115,13 @@ const GeneralRoom = ({ socket }) => {
     return (
         <>
         <Toast/>
+        {leaveModal ? 
+            <LeaveModal
+                show={showLeaveModal} 
+                setShow={setShowLeaveModal}
+                leaveCb={handleLeave}
+            /> : <></>
+        }
         {showPromptModal ? 
             <PromptModal
                 show={showPromptModal} 
@@ -122,7 +135,7 @@ const GeneralRoom = ({ socket }) => {
         <div className="grid grid-cols-1 justify-items-center">
             <RoomHeader 
                 code={roomCode}
-                leaveCb={handleLeave}
+                leaveCb={leaveModal}
             />
             <div className="w-full grid grid-cols-1 justify-items-center">
                 <div className="w-1/2 grid-grid-cols-1 mb-3">

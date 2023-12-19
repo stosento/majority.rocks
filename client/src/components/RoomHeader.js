@@ -30,7 +30,7 @@ const RoomHeader = ({ code, leaveCb }) => {
     return (
         <div className="w-1/2 grid grid-flow-col auto-cols-max my-3 justify-center">
             <div className="mr-3">
-                <h1 onClick={leaveCb}  className="text-left cursor-pointer font-teko text-5xl text-blue-600 hover:text-blue-700">&#8592;</h1>
+                <h1 onClick={leaveCb} className="text-left cursor-pointer font-teko text-5xl text-blue-600 hover:text-blue-700">&#8592;</h1>
             </div>
             <div className="self-center">
                 <h1 className="text-center font-teko text-7xl">ROOM {left}{codeElement}{right} </h1>
