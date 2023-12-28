@@ -67,7 +67,7 @@ const GeneralRoom = ({ socket }) => {
 
             }
             setDisableSkip(false);
-            generateToastMessage('Song has been skipped');
+            generateToastMessage('The room has voted to skip!');
         });
 
     }, []);
