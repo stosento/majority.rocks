@@ -13,12 +13,10 @@ const SettingsModal = ({show, setShow, updateSettings, skipRule}) => {
     const [rule, setRule] = useState(skipRule);
 
     const handleClose = () => {
-        console.log("Blah");
         setShow(false);
     }
     
     const saveSettings = () => {
-        console.log("In save settings of the settings modal");
         updateSettings(rule.value);
         setShow(false);
     }

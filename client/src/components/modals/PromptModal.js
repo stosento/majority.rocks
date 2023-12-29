@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextBar from '../TextBar';
 import { Modal } from "react-bootstrap";
+import TextInput from '../TextInput';
 
-const PromptModal = ({show, setShow, animations, setAnimations, prompt, handlePrompt}) => {
+const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value}) => {
 
-    const [text, setText] = useState("");
+    const [text, setText] = useState(value);
 
     const handleClose = () => {
-        setShow(false);
-        setAnimations(true);
+      setShow(false);
+    }
+
+    const handleInputChange = (e) => {
+      setText(e.target.value.toUpperCase());
+    }
+
+    const handleSubmit = () => {
+      onSubmit(text);
+      setShow(false);
     }
 
     return (
@@ -24,18 +33,18 @@ const PromptModal = ({show, setShow, animations, setAnimations, prompt, handlePr
               <Modal.Title>Room Settings</Modal.Title>
             </Modal.Header>
             <Modal.Body className='bg-gray-800 text-white'>
-                <TextBar 
+                <TextInput 
                     id="prompt"
                     label="Enter your skip prompt"
                     placeholder="Prompt..."
                     value={text}
-                    cb={setText}
+                    onValueChange={handleInputChange}
                 />
             </Modal.Body>
             <Modal.Footer className="bg-gray-800">
                 <button
                     className="text-white rounded bg-green-700 h-10 w-1/4"
-                    onClick={handlePrompt(text)}
+                    onClick={handleSubmit}
                 >
                     Set Prompt
                 </button>

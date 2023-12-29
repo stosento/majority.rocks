@@ -23,7 +23,7 @@ const GeneralRoom = ({ socket }) => {
 
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
-    const [prompt, setPrompt] = useState(state.prompt ? state.prompt : null);
+    const [prompt, setPrompt] = useState(state.prompt ? state.prompt : "");
     const [showPromptModal, setShowPromptModal] = useState(true);
     const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [promptModalAnimations, setPromptModalAnimations] = useState(false);
@@ -107,8 +107,9 @@ const GeneralRoom = ({ socket }) => {
         setSkipTarget(data.skipTarget);
     }
 
-    const handlePromptUpdate = (text) => {
-        console.log('Handle prompt method');
+    const handlePromptModalSubmit = (text) => {
+        console.log('Handle prompt submit modal');
+        setPromptModalAnimations(true);
         setPrompt(text);
     }
 
@@ -128,8 +129,8 @@ const GeneralRoom = ({ socket }) => {
                 setShow={setShowPromptModal}
                 animations={promptModalAnimations}
                 setAnimations={setPromptModalAnimations}
-                prompt={prompt}
-                handlePrompt={handlePromptUpdate}
+                value={prompt}
+                onSubmit={handlePromptModalSubmit}
             /> : <></>
         }
         <div className="grid grid-cols-1 justify-items-center">
@@ -145,7 +146,7 @@ const GeneralRoom = ({ socket }) => {
                 <div className="w-1/2 text-center">
                     <PromptText 
                         text={prompt}
-                        textCb={setPrompt}
+                        textCb={setShowPromptModal}
                     />
                     <SkipButton
                         skipCb={handleSkip}
