@@ -6,6 +6,7 @@ import { generateRoomCode, getTokenFromUrl } from "../utils/utils";
 import Header from "../components/Header";
 import TextBar from "../components/TextBar";
 import Dropdown from "../components/Dropdown";
+import {IconBrandSpotify} from "@tabler/icons-react";
 import WideButton from "../components/buttons/WideButton";
 import { SkipRule } from "../objects/enums";
 
@@ -88,10 +89,12 @@ const Create = ({ socket, spotifyApi }) => {
                     </div>
                     <div className="grid grid-cols-1">
                         <button
-                            className="h-24 m-2 px-2 py-8 font-bold rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-xl"
+                            className="h-24 m-2 px-2 py-8 font-bold rounded bg-[#1DB954] hover:bg-[#129e43] active:bg-[#2f7949] text-xl"
                             onClick={createRoom}
                         >
-                            Music
+                           <p className="flex justify-center">
+                                <IconBrandSpotify className="mt-1"/>Music
+                            </p>
                         </button>
                     </div>
                 </div>
