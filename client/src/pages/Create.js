@@ -19,6 +19,7 @@ const Create = ({ socket, spotifyApi }) => {
     ];
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+    const [nameError, setNameError] = useState(false);
     const [skipRule, setSkipRule] = useState(options[1]);
     const [spotifyAccessToken, setSpotifyAccessToken] = useState("");
 
@@ -45,7 +46,10 @@ const Create = ({ socket, spotifyApi }) => {
 
     const createRoom = (e) => {
         e.preventDefault();
-
+        if (userName === '') {
+            setNameError(true);
+            return;
+        }
         const roomCode = generateRoomCode();
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
         navigate('/room', {state: {token: spotifyAccessToken, roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
@@ -53,7 +57,10 @@ const Create = ({ socket, spotifyApi }) => {
 
     const createGeneralRoom = (e) => {
         e.preventDefault();
-
+        if (userName === '') {
+            setNameError(true);
+            return;
+        }
         const roomCode = generateRoomCode();
         socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
         navigate('/generalRoom', {state: {roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
@@ -69,6 +76,7 @@ const Create = ({ socket, spotifyApi }) => {
                     placeholder="Name..."
                     value={userName}
                     cb={setUserName}
+                    error={nameError}
                 />
                 <Dropdown
                     id="skipRule"

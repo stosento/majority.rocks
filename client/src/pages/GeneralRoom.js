@@ -25,6 +25,7 @@ const GeneralRoom = ({ socket }) => {
     const [users, setUsers] = useState([]);
     const [prompt, setPrompt] = useState(state.prompt ? state.prompt : "");
     const [showPromptModal, setShowPromptModal] = useState(true);
+    const [showPromptExit, setShowPromptExit] = useState(false);
     const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [promptModalAnimations, setPromptModalAnimations] = useState(false);
     const [skipTarget, setSkipTarget] = useState(1);
@@ -110,6 +111,7 @@ const GeneralRoom = ({ socket }) => {
     const handlePromptModalSubmit = (text) => {
         console.log('Handle prompt submit modal');
         setPromptModalAnimations(true);
+        setShowPromptExit(true);
         setPrompt(text);
     }
 
@@ -131,6 +133,7 @@ const GeneralRoom = ({ socket }) => {
                 setAnimations={setPromptModalAnimations}
                 value={prompt}
                 onSubmit={handlePromptModalSubmit}
+                showExit={showPromptExit}
             /> : <></>
         }
         <div className="grid grid-cols-1 justify-items-center">

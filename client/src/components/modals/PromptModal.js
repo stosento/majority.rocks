@@ -3,9 +3,10 @@ import TextBar from '../TextBar';
 import { Modal } from "react-bootstrap";
 import TextInput from '../TextInput';
 
-const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value}) => {
+const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value, showExit}) => {
 
     const [text, setText] = useState(value);
+    const [promptError, setPromptError] = useState(false);
 
     const handleClose = () => {
       setShow(false);
@@ -16,6 +17,10 @@ const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value}
     }
 
     const handleSubmit = () => {
+      if (text === '') {
+        setPromptError(true)
+        return;
+      }
       onSubmit(text);
       setShow(false);
     }
@@ -39,6 +44,7 @@ const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value}
                     placeholder="Prompt..."
                     value={text}
                     onValueChange={handleInputChange}
+                    error={promptError}
                 />
             </Modal.Body>
             <Modal.Footer className="bg-gray-800">
@@ -48,12 +54,14 @@ const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value}
                 >
                     Set Prompt
                 </button>
-                <button
-                    className="text-white rounded bg-gray-500 h-10 w-1/6"
-                    onClick={handleClose}
-                >
-                    Exit
-                </button>
+                {showExit ?
+                  <button
+                      className="text-white rounded bg-gray-500 h-10 w-1/6"
+                      onClick={handleClose}
+                  >
+                      Exit
+                  </button>
+                : <></>}
             </Modal.Footer>
           </Modal>
         </>

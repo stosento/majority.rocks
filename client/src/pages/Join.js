@@ -15,7 +15,9 @@ const Join = ({ socket }) => {
     console.log('roomID: ', roomId);
 
     const [userName, setUserName] = useState(localStorage.getItem("userName") || "");
+    const [nameError, setNameError] = useState(false);
     const [roomCode, setRoomCode] = useState(roomId ? roomId : "");
+    const [codeError, setCodeError] = useState(false);
 
     useEffect(() => {
 
@@ -40,6 +42,11 @@ const Join = ({ socket }) => {
 
     const joinRoom = (e) => {
         e.preventDefault();
+        userName === '' ? setNameError(true) : setNameError(false);
+        roomCode === '' ? setCodeError(true) : setCodeError(false);
+        if (userName === '' || roomCode === '') {
+            return;
+        }
         socket.emit('joinRoom', {userName, roomCode, socketId: socket.id})
     }
 
@@ -55,6 +62,7 @@ const Join = ({ socket }) => {
                     placeholder="Name..."
                     value={userName}
                     cb={setUserName}
+                    error={nameError}
                 />
                 <TextBar 
                     id="roomCode"
@@ -63,6 +71,7 @@ const Join = ({ socket }) => {
                     value={roomCode}
                     length={4}
                     cb={setRoomCode}
+                    error={codeError}
                 />
                 <WideButton
                     text="Join"
