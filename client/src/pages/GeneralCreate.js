@@ -27,7 +27,7 @@ const GeneralCreate = ({ socket, spotifyApi }) => {
         e.preventDefault();
 
         const roomCode = generateRoomCode();
-        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value, roomType: 'general'});
         navigate('/generalRoom', {state: {prompt, roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
     }
 

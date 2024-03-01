@@ -51,7 +51,7 @@ const Create = ({ socket, spotifyApi }) => {
             return;
         }
         const roomCode = generateRoomCode();
-        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value, roomType: 'music'});
         navigate('/room', {state: {token: spotifyAccessToken, roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
     }
 
@@ -62,7 +62,7 @@ const Create = ({ socket, spotifyApi }) => {
             return;
         }
         const roomCode = generateRoomCode();
-        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value});
+        socket.emit('createRoom', {roomCode, userName, socketId: socket.id, skipRule: skipRule.value, roomType: 'general'});
         navigate('/generalRoom', {state: {roomCode, skipRule: skipRule.value, host: { userName, socketId: socket.id}}});
     }
 
@@ -101,7 +101,7 @@ const Create = ({ socket, spotifyApi }) => {
                             onClick={createRoom}
                         >
                            <p className="flex justify-center">
-                                <IconBrandSpotify className="mt-1"/>Music
+                                <IconBrandSpotify className="mt-1 mr-1"/>Music
                             </p>
                         </button>
                     </div>

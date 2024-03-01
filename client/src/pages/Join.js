@@ -33,9 +33,14 @@ const Join = ({ socket }) => {
                 theme: "dark",
             });
         });
-        socket.on("joinRoomSuccess", (roomCode) => {
-            console.log("Joining room", roomCode);
-            navigate(`/room`, { state: { code: roomCode } });
+        socket.on("joinRoomSuccess", (data) => {
+            console.log("Joining room", data.roomCode);
+            console.log("Room type: ", data.roomType);
+            if (data.roomType === 'general') {
+                navigate(`/generalRoom`, { state: { code: data.roomCode } });
+            } else {
+                navigate(`/room`, { state: { code: data.roomCode } });
+            }
         })
 
     }, []);

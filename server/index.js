@@ -160,7 +160,7 @@ io.on('connection', (socket) => {
 
     // Update User List with host
     const userInfo = {userName: data.userName, socketId: data.socketId};
-    createRoom(data.roomCode, userInfo, data.skipRule)
+    createRoom(data.roomCode, userInfo, data.skipRule, data.roomType)
 
     // Add socket to specific room
     console.log(`user ${socket.id} joining room ${data.roomCode}`)
@@ -188,7 +188,10 @@ io.on('connection', (socket) => {
       socket.join(data.roomCode);
       addToRoomMap(data.roomCode, userInfo);
 
-      io.to(socket.id).emit('joinRoomSuccess', data.roomCode); // update single user they joined
+      roomInfo = roomMap.get(data.roomCode);
+      roomType = roomInfo.roomType;
+
+      io.to(socket.id).emit('joinRoomSuccess', {roomCode: data.roomCode, roomType: roomType}); // update single user they joined
       socket.to(data.roomCode).emit('userJoined', {name: data.userName, room: roomMap.get(data.roomCode)}); // update all other users
     } else {
       io.to(socket.id).emit("joinRoomFailed", data.roomCode);
@@ -243,6 +246,14 @@ io.on('connection', (socket) => {
     io.to(data.roomCode).emit("roomInfo", roomMap.get(data.roomCode));
   })
 
+   // Set prompt
+   socket.on('updatePrompt', (data) => {
+    let roomInfo = roomMap.get(data.roomCode);
+    roomInfo.prompt = data.prompt;
+    roomMap.set(data.roomCode, roomInfo);
+    io.to(data.roomCode).emit("roomInfo", roomMap.get(data.roomCode));
+   })
+
   // Leaving rooms
   socket.on('disconnecting', () => {
     console.log(`user ${socket.id} leaving rooms ${new Array(...socket.rooms).join(' ')}`)
@@ -282,7 +293,7 @@ function getRandomColor(colors) {
   return [color, colors];
 }
 
-function createRoom(roomCode, userInfo, skipRule, playback) {
+function createRoom(roomCode, userInfo, skipRule, type, playback) {
 
   let [color, updatedColors] = getRandomColor(availableColors);
   availableColors = updatedColors;
@@ -295,11 +306,13 @@ function createRoom(roomCode, userInfo, skipRule, playback) {
   //Assume there are no objects for this room at this point
   let roomInfo = {
     roomCode: roomCode,
+    roomType: type,
     skipCount: 0,
     users: [],
     host: info,
     skipRule: skipRule,
     skipTarget: 1,
+    prompt: "",
     playback: {
       img: "",
       text: ""

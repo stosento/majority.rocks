@@ -21,10 +21,12 @@ const GeneralRoom = ({ socket }) => {
     const location = useLocation();
     const state = location.state;
 
+    const isHost = state.host ? state.host.socketId === socket.id : false;
+
     const [roomLoaded, setRoomLoaded] = useState(false);
     const [users, setUsers] = useState([]);
     const [prompt, setPrompt] = useState(state.prompt ? state.prompt : "");
-    const [showPromptModal, setShowPromptModal] = useState(true);
+    const [showPromptModal, setShowPromptModal] = useState(isHost);
     const [showPromptExit, setShowPromptExit] = useState(false);
     const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [promptModalAnimations, setPromptModalAnimations] = useState(false);
@@ -105,11 +107,13 @@ const GeneralRoom = ({ socket }) => {
         setUsers(data.users);
         setHost(data.host);
         setRoomCode(data.roomCode);
+        setPrompt(data.prompt);
         setSkipTarget(data.skipTarget);
     }
 
     const handlePromptModalSubmit = (text) => {
         console.log('Handle prompt submit modal');
+        socket.emit("updatePrompt", {roomCode: roomCode, prompt: text});
         setPromptModalAnimations(true);
         setShowPromptExit(true);
         setPrompt(text);
