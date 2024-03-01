@@ -154,6 +154,7 @@ const GeneralRoom = ({ socket }) => {
                     <PromptText 
                         text={prompt}
                         textCb={setShowPromptModal}
+                        isHost={host ? host.socketId === socket.id : false}
                     />
                     <SkipButton
                         skipCb={handleSkip}
