@@ -28,13 +28,6 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
-app.use(express.static(path.resolve(__dirname, '../../app/build')));
-app.use(express.static(__dirname + '/public'))
-   .use(cors())
-   .use(cookieParser());
-
-const http = require('http').createServer(app);
-
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
   
@@ -42,6 +35,10 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 }
+
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+const http = require('http').createServer(app);
 
 app.get('/login', function(req, res) {
 
@@ -281,9 +278,9 @@ io.on('connection', (socket) => {
 // All remaining requests return the React app, so it can handle routing.
 
 // This was throwing an ENOENT error, so commenting out for now
-app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../../app/build', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, '../../app/build', 'index.html'));
+// });
 
 // Set Server to HTTP
 http.listen(port, () => {
