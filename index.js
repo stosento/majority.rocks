@@ -28,6 +28,22 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
+
+console.log("Current directory:", __dirname);
+console.log("Build directory:", path.join(__dirname, 'client/build'));
+
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, 'client/build', 'index.html');
+  console.log("Trying to serve:", indexPath);
+  if (require('fs').existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('File not found: ' + indexPath);
+  }
+});
+
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
   
@@ -35,8 +51,6 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
 }
-
-app.use(express.static(path.join(__dirname, '../client/build')));
 
 const http = require('http').createServer(app);
 
