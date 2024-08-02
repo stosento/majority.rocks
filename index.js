@@ -39,33 +39,33 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, 'client/build', 'index.html');
-  console.log(`Serving index.html from: ${indexPath}`);
-  res.sendFile(indexPath);
-});
+// app.get('*', (req, res) => {
+//   const indexPath = path.join(__dirname, 'client/build', 'index.html');
+//   console.log(`Serving index.html from: ${indexPath}`);
+//   res.sendFile(indexPath);
+// });
 
-app.use(express.static(path.join(__dirname, '../client/build')));
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('*', (req, res) => {
-  const indexPath = path.join(__dirname, 'client/build', 'index.html');
-  console.log("Trying to serve:", indexPath);
-  if (require('fs').existsSync(indexPath)) {
-    res.sendFile(indexPath);
-  } else {
-    res.status(404).send('File not found: ' + indexPath);
-  }
-});
+// app.get('*', (req, res) => {
+//   const indexPath = path.join(__dirname, 'client/build', 'index.html');
+//   console.log("Trying to serve:", indexPath);
+//   if (require('fs').existsSync(indexPath)) {
+//     res.sendFile(indexPath);
+//   } else {
+//     res.status(404).send('File not found: ' + indexPath);
+//   }
+// });
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  app.use(express.static(path.join(__dirname, 'client/build')));
   
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
   });
 }
 
-const http = require('http').createServer(app);
+
 
 app.get('/login', function(req, res) {
 
@@ -170,6 +170,8 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+const http = require('http').createServer(app);
 
 // ----------------------------------------------------------------------------
 
