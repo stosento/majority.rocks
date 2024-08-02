@@ -32,6 +32,19 @@ var app = express();
 console.log("Current directory:", __dirname);
 console.log("Build directory:", path.join(__dirname, 'client/build'));
 
+// LOGGING
+
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  next();
+});
+
+app.get('*', (req, res) => {
+  const indexPath = path.join(__dirname, 'client/build', 'index.html');
+  console.log(`Serving index.html from: ${indexPath}`);
+  res.sendFile(indexPath);
+});
+
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('*', (req, res) => {
