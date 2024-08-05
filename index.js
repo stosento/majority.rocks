@@ -29,46 +29,20 @@ var stateKey = 'spotify_auth_state';
 
 var app = express();
 
-console.log("Current directory:", __dirname);
-console.log("Build directory:", path.join(__dirname, 'client/build'));
-
-// LOGGING
-
+// Middleware
+app.use(cors());
+app.use(cookieParser());
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
 
-// app.get('*', (req, res) => {
-//   const indexPath = path.join(__dirname, 'client/build', 'index.html');
-//   console.log(`Serving index.html from: ${indexPath}`);
-//   res.sendFile(indexPath);
-// });
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+// API Routes
+const apiRouter = express.Router();
 
-// app.get('*', (req, res) => {
-//   const indexPath = path.join(__dirname, 'client/build', 'index.html');
-//   console.log("Trying to serve:", indexPath);
-//   if (require('fs').existsSync(indexPath)) {
-//     res.sendFile(indexPath);
-//   } else {
-//     res.status(404).send('File not found: ' + indexPath);
-//   }
-// });
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'client/build')));
-  
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-  });
-}
-
-
-
-app.get('/login', function(req, res) {
-
+apiRouter.get('/login', function(req, res) {
+  console.log("Login route hit");
   console.log("client_id", client_id);
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -85,8 +59,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
-app.get('/callback', function(req, res) {
-
+apiRouter.get('/callback', function(req, res) {
   // your application requests refresh and access tokens
   // after checking the state parameter
 
@@ -147,8 +120,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.get('/refresh_token', function(req, res) {
-
+apiRouter.get('/refresh_token', function(req, res) {
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
   var authOptions = {
@@ -170,6 +142,28 @@ app.get('/refresh_token', function(req, res) {
     }
   });
 });
+
+// Use the API router
+app.use('/api', apiRouter);
+
+// Static file serving
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+// Production mode
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
+
+// if (process.env.NODE_ENV === 'production') {
+//   app.use(express.static(path.join(__dirname, 'client/build')));
+  
+//   app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+//   });
+// }
 
 const http = require('http').createServer(app);
 
