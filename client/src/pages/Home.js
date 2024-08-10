@@ -11,8 +11,8 @@ const Home = ({ socket }) => {
     const state = location.state;
 
     const loginUrl = process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:8888/login'
-        : 'https://majority.rocks/login';
+        ? 'http://localhost:8888/api/login'
+        : 'https://majority.rocks/api/login';
 
     const navigate = useNavigate();
 
