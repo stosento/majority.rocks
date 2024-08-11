@@ -159,29 +159,22 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-
-// if (process.env.NODE_ENV === 'production') {
-//   app.use(express.static(path.join(__dirname, 'client/build')));
-  
-//   app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
-//   });
-// }
-
-const http = require('http').createServer(app);
-
 // ----------------------------------------------------------------------------
 
 let roomMap = new Map();
 
 // SOCKET.IO BEHAVIOR
 
-const io = require('socket.io')(http, {
+const { Server } = require("socket.io");
+const http = require('http')
+const server = http.createServer(app);
+
+const io = new Server(server, {
   cors: {
-    origin: `http://localhost:${frontendPort}`
+    origin: "https://majority.rocks",
+    methods: ["GET", "POST"]
   }
-}
-);
+});
 
 io.on('connection', (socket) => {
   console.log(`${socket.id} user connected`);
@@ -303,14 +296,9 @@ io.on('connection', (socket) => {
 
 // All remaining requests return the React app, so it can handle routing.
 
-// This was throwing an ENOENT error, so commenting out for now
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, '../../app/build', 'index.html'));
-// });
-
 // Set Server to HTTP
-http.listen(port, () => {
-  console.log(`listening at http://localhost:${port}`)
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 })
 
 // UTILITY METHODS

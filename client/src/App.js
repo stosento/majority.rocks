@@ -14,8 +14,8 @@ import Join from "./pages/Join";
 import GeneralCreate from "./pages/GeneralCreate";
 import GeneralRoom from "./pages/GeneralRoom";
 
-// const socket = initiateSocketConnection();
-const socket = io.connect('http://localhost:8888')
+const SOCKET_URL = 'https://majority.rocks';
+const socket = io(SOCKET_URL);
 const spotifyApi = new SpotifyWebApi();
 
 function App() {
