@@ -15,7 +15,9 @@ import GeneralCreate from "./pages/GeneralCreate";
 import GeneralRoom from "./pages/GeneralRoom";
 
 const SOCKET_URL = 'https://majority.rocks';
-const socket = io(SOCKET_URL);
+const socket = io(SOCKET_URL, {
+  transports: ['websocket', 'polling']
+});
 const spotifyApi = new SpotifyWebApi();
 
 function App() {

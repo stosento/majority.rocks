@@ -30,10 +30,16 @@ var stateKey = 'spotify_auth_state';
 var app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ["https://majority.rocks", "https://www.majority.rocks", "http://localhost:3000"]
+}));
 app.use(cookieParser());
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  res.header('Access-Control-Allow-Origin', 'https://www.majority.rocks');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
@@ -171,7 +177,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://majority.rocks",
+    origin: ["https://majority.rocks", "https://www.majority.rocks", "http://localhost:3000"],
     methods: ["GET", "POST"]
   }
 });
