@@ -8,7 +8,7 @@ const SavedButton = ({ savedSongs }) => {
 
     return (
         <>
-            <button onClick={handleShowModal} className="w-1/6 px-5 py-1 my-2 font-bold text-lg rounded bg-gray-600 hover:bg-gray-800">
+            <button onClick={handleShowModal} className="w-1/2 md:w-1/3 px-5 py-1 my-2 font-bold text-lg rounded bg-gray-600 hover:bg-gray-800">
                 Saved Songs
             </button>
             <SavedModal 

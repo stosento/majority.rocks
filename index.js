@@ -6,7 +6,7 @@ const request = require('request');
 const cors = require('cors');
 const querystring = require('querystring');
 const cookieParser = require('cookie-parser');
-require('dotenv').config({path: '../.env'});
+require('dotenv').config({path: '.env'});
 
 const client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 const client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret

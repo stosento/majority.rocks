@@ -54,13 +54,13 @@ const Home = ({ socket }) => {
             <div className="jusity-items-center my-3 cursor-pointer" onClick={() => {navigate("/");}}>
                 <h1 className="text-center font-teko text-7xl">MAJORITY<span className="text-blue-600">.</span>ROCKS</h1>
             </div>
-            <div className="w-1/2">
+            <div className="w-3/4 md:w-1/2">
                 <p className="cent text-center mb-5 text-lg font-alkatra text-gray-200">
                     An anonymous "vote to skip" application for group listening settings.
                 </p>
             </div>
-            <div className="border-b-2 border-gray-500 w-5/12 mb-5"></div>
-            <div className="w-1/2">
+            <div className="border-b-2 border-gray-500 sm:w-5/12 w-3/4 mb-5"></div>
+            <div className="w-5/6 md:w-1/2">
                 <div className="grid grid-cols-2">
                     <div className="grid grid-cols-1">
                         <button 

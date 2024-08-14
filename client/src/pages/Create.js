@@ -70,7 +70,7 @@ const Create = ({ socket, spotifyApi }) => {
         <div className="w-full grid grid-cols-1 justify-items-center">
             <Header title="CREATE ROOM"/>
             <div className="w-2/3">
-                <TextBar 
+                <TextBar
                     id="name"
                     label="Enter your name"
                     placeholder="Name..."

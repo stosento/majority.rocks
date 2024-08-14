@@ -161,11 +161,11 @@ const Room = ({ socket }) => {
                 leaveCb={leaveModal}
             />
             <div className="w-full grid grid-cols-1 justify-items-center">
-                <div className="w-1/2 grid-grid-cols-1 mb-3">
+                <div className="w-3/4 md:w-1/2 grid-grid-cols-1 mb-3">
                     <HostInfo host={host}/>
                     <Listeners users={users}/>
                 </div>
-                <div className="w-1/2 text-center">
+                <div className="w-5/6 md:w-1/2 text-center">
                     <Playback playback={currentPlayback}/>
                     <RoomButtons
                         skipCb={handleSkip}
