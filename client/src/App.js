@@ -14,9 +14,13 @@ import Join from "./pages/Join";
 import GeneralCreate from "./pages/GeneralCreate";
 import GeneralRoom from "./pages/GeneralRoom";
 
-const SOCKET_URL = 'https://majority.rocks';
+const SOCKET_URL = process.env.NODE_ENV === 'production'
+? 'https://majority.rocks'
+: 'http://localhost:8888';
+
 const socket = io(SOCKET_URL, {
-  transports: ['websocket', 'polling']
+  transports: ['websocket', 'polling'],
+  withCredentials: true
 });
 const spotifyApi = new SpotifyWebApi();
 

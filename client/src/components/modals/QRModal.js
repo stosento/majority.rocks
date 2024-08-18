@@ -14,7 +14,7 @@ const QRModal = (props) => {
               <Modal.Title className="flex">Scan to join</Modal.Title>
             </Modal.Header>
             <Modal.Body className='flex justify-center bg-gray-800'>
-                <QRCode value={ window.location.origin + '/join/' + props.roomId.toLowerCase()}/>
+                <QRCode value={ window.location.origin + '/join/' + props.roomId.toUpperCase()}/>
             </Modal.Body>
             <Modal.Footer className='bg-gray-800'>
                 <button

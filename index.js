@@ -31,7 +31,9 @@ var app = express();
 
 // Middleware
 app.use(cors({
-  origin: ["https://majority.rocks", "https://www.majority.rocks", "http://localhost:3000"]
+  origin: ["http://localhost:3000", "https://majority.rocks", "https://www.majority.rocks"],
+  methods: ["GET", "POST"],
+  credentials: true
 }));
 app.use(cookieParser());
 app.use((req, res, next) => {
@@ -178,7 +180,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: ["https://majority.rocks", "https://www.majority.rocks", "http://localhost:3000"],
-    methods: ["GET", "POST"]
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -206,6 +209,7 @@ io.on('connection', (socket) => {
 
     if (roomIsValid(data.roomCode)) {
       let [color, updatedColors] = getRandomColor(availableColors);
+      console.log('color: ', color);
       availableColors = updatedColors;
 
       const userInfo = {

@@ -69,15 +69,38 @@ const Room = ({ socket }) => {
         socket.on('hostLeft', () => {
             navigate('/', {state: {roomClosed: true} });
         });
+
         socket.on('skipSong', (data) => {
             if (data.host.socketId === socket.id) {
-                spotifyApi.skipToNext().then(async () => {
-                    setTimeout(() => {
-                        spotifyApi.getMyCurrentPlayingTrack().then((result) => {
-                            updatePlayback(result.item);                           
-                        });
-                    }, 500);
-                });
+                spotifyApi.skipToNext()
+                    .then(() => {
+                        console.log('Successfully skipped to next track');
+                        return new Promise(resolve => setTimeout(resolve, 500));
+                    })
+                    .then(() => spotifyApi.getMyCurrentPlayingTrack())
+                    .then((result) => {
+                        console.log('Raw API response:', JSON.stringify(result));
+                        if (result && result.item) {
+                            const trackInfo = {
+                                artist: result.item.artists.map(artist => artist.name).join(', '),
+                                song: result.item.name,
+                                image: result.item.album.images[0]?.url || ''
+                            };
+                            updatePlayback(trackInfo);
+                        } else {
+                            console.warn('Unexpected API response structure:', result);
+                            // Handle case where track info is not available
+                            updatePlayback({artist: 'Unknown', song: 'Unknown', image: ''});
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error in Spotify API calls:', error);
+                        if (error.response) {
+                            console.error('Error response:', error.response);
+                        }
+                        // Handle error case
+                        updatePlayback({artist: 'Error', song: 'Unable to fetch track info', image: ''});
+                    });
             }
             setDisableSkip(false);
             generateToastMessage('Song has been skipped');
