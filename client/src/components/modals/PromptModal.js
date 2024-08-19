@@ -40,7 +40,7 @@ const PromptModal = ({show, setShow, animations, setAnimations, onSubmit, value,
             <Modal.Body className='bg-gray-800 text-white'>
                 <TextInput 
                     id="prompt"
-                    label="Enter your skip prompt"
+                    label="Enter your prompt"
                     placeholder="Prompt..."
                     value={text}
                     onValueChange={handleInputChange}

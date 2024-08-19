@@ -5,8 +5,8 @@ import RoomHeader from "../components/RoomHeader";
 import HostInfo from "../components/HostInfo";
 import JoinedUsers from "../components/JoinedUsers";
 import SettingsButton from "../components/buttons/SettingsButton";
-import SkipButton from "../components/buttons/SkipButton";
-import SkipText from "../components/SkipText";
+import VoteButton from "../components/buttons/VoteButton";
+import VoteText from "../components/VoteText";
 import Toast from "../components/Toast";
 
 import { generateToastMessage } from "../utils/utils";
@@ -156,12 +156,12 @@ const GeneralRoom = ({ socket }) => {
                         textCb={setShowPromptModal}
                         isHost={host ? host.socketId === socket.id : false}
                     />
-                    <SkipButton
-                        skipCb={handleSkip}
-                        disableSkip={disableSkip}
+                    <VoteButton
+                        voteCb={handleSkip}
+                        disableVote={disableSkip}
                     />
                 </div>
-                <SkipText count={skipTarget}/>
+                <VoteText count={skipTarget}/>
                 <SettingsButton
                     currentId={socket.id}
                     hostId={host ? host.socketId : null}

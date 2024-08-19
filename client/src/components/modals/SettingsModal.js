@@ -30,7 +30,7 @@ const SettingsModal = ({show, setShow, updateSettings, skipRule}) => {
             <Modal.Body className='bg-gray-800 text-white'>
                 <Dropdown
                     id="skipRule"
-                    label="Skip Rule"
+                    label="Rule"
                     placeholder="SELECT..."
                     options={options}
                     value={rule}
