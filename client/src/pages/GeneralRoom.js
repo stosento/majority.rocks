@@ -70,7 +70,7 @@ const GeneralRoom = ({ socket }) => {
 
             }
             setDisableSkip(false);
-            generateToastMessage('The room has voted to skip!');
+            generateToastMessage('Enough votes have come in to the room.');
         });
 
     }, []);
